@@ -1,0 +1,7 @@
+apiVersion: dappmesh.io/v1alpha1
+kind: DappProduct
+metadata:
+  name: dapp-product-sales-order
+  namespace: dappmesh
+spec:
+  name: dapp-product-sales-order

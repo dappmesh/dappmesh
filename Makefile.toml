@@ -1,0 +1,23 @@
+extend = [
+	{ path = "Makefile.local.toml" },
+	{ path = "Makefile.ci.toml" }
+]
+
+[env]
+CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
+
+[config]
+skip_core_tasks = true
+time_summary = true
+reduce_output = true
+default_to_workspace = false
+
+[tasks.empty]
+disabled = true
+private = true
+
+[tasks.init]
+private = true
+
+[tasks.end]
+private = true

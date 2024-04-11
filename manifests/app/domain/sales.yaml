@@ -1,0 +1,7 @@
+apiVersion: dappmesh.io/v1alpha1
+kind: DappDomain
+metadata:
+  name: dapp-domain-sales
+  namespace: dappmesh
+spec:
+  name: dapp-domain-sales

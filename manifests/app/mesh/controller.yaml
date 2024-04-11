@@ -1,0 +1,7 @@
+apiVersion: dappmesh.io/v1alpha1
+kind: DappMesh
+metadata:
+  name: dapp-mesh-controller
+  namespace: dappmesh
+spec:
+  name: dapp-mesh-controller

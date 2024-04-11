@@ -1,0 +1,52 @@
+[workspace]
+resolver = "2"
+members = [
+	"crates/domain-operator",
+	"crates/mesh-operator",
+	"crates/platform",
+	"crates/product-operator"
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+authors = ["DappMesh Developers <developers@dappmesh.io>"]
+readme = "./README.md"
+homepage = "https://dappmesh.io/"
+repository = "https://github.com/dappmesh/dappmesh"
+license = "BSL-1.0"
+
+[workspace.dependencies]
+dapp-platform = { path = "crates/platform", version = "0.1.0" }
+anyhow = "1.0.80"
+assert-json-diff = "2.0.2"
+chrono = "0.4.34"
+futures = "0.3.30"
+hyper = "1.2.0"
+k8s-openapi = { version = "0.21", default-features = false, features = ["v1_24"]}
+kube = {version = "0.90.0", features = ["derive", "runtime"]}
+kube-client = "0.90.0"
+kube-core = "0.90.0"
+kube-derive = "0.90.0"
+schemars = "0.8.16"
+semver = "1.0.21"
+serde = "1.0.196"
+serde_json = "1.0.113"
+serde_yaml = "0.9.32"
+thiserror = "1.0.57"
+tokio = { version = "1.36", features = ["macros", "rt-multi-thread"]}
+tower-test = "0.4.0"
+tracing = "0.1.40"
+tracing-subscriber = {version = "0.3.18", features = ["json", "env-filter"]}
+uuid = { version = "1.7.0", features = ["v4"] }
+
+[profile.release]
+lto = true
+strip = true
+opt-level = 3
+panic = 'abort'
+codegen-units = 1
+
+[profile.bench]
+strip = false

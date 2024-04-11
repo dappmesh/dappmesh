@@ -1,0 +1,237 @@
+
+# cargo-vet audits file
+
+[[audits.ahash]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.8.9"
+
+[[audits.anyhow]]
+who = "Omar Carey"
+criteria = "safe-to-run"
+version = "1.0.80"
+
+[[audits.assert-json-diff]]
+who = "Omar Carey"
+criteria = "safe-to-run"
+version = "2.0.2"
+
+[[audits.async-stream]]
+who = "Omar Carey"
+criteria = "safe-to-run"
+version = "0.3.5"
+
+[[audits.async-stream-impl]]
+who = "Omar Carey"
+criteria = "safe-to-run"
+version = "0.3.5"
+
+[[audits.bumpalo]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "3.15.3"
+
+[[audits.cc]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "1.0.86"
+
+[[audits.darling]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.20.8"
+
+[[audits.darling_core]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.20.8"
+
+[[audits.darling_macro]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.20.8"
+
+[[audits.lazy_static]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "1.4.0"
+
+[[audits.matchers]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.1.0"
+
+[[audits.mio]]
+who = "Rodrigo de Alvarenga Mattos <rodrigo@bragile.com>"
+criteria = "safe-to-deploy"
+delta = "0.8.10 -> 0.8.11"
+
+[[audits.nu-ansi-term]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.46.0"
+
+[[audits.overload]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.1.1"
+
+[[audits.regex-automata]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.1.10"
+
+[[audits.regex-syntax]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.6.29"
+
+[[audits.regex-syntax]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.8.2"
+
+[[audits.ryu]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "1.0.17"
+
+[[audits.semver]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "1.0.22"
+
+[[audits.serde]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "1.0.197"
+
+[[audits.serde_derive]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "1.0.197"
+
+[[audits.serde_json]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "1.0.114"
+
+[[audits.serde_yaml]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.9.32"
+
+[[audits.sharded-slab]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.1.7"
+
+[[audits.socket2]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.5.6"
+
+[[audits.syn]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "2.0.50"
+
+[[audits.thread_local]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "1.1.8"
+
+[[audits.tokio-stream]]
+who = "Omar Carey"
+criteria = "safe-to-run"
+version = "0.1.14"
+
+[[audits.tokio-test]]
+who = "Omar Carey"
+criteria = "safe-to-run"
+version = "0.4.3"
+
+[[audits.tower-test]]
+who = "Omar Carey"
+criteria = "safe-to-run"
+version = "0.4.0"
+
+[[audits.tracing-log]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.2.0"
+
+[[audits.tracing-serde]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.1.3"
+
+[[audits.tracing-subscriber]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.3.18"
+
+[[audits.uuid]]
+who = "Omar Carey"
+criteria = "safe-to-run"
+version = "1.7.0"
+
+[[audits.valuable]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.1.0"
+
+[[audits.winapi]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.3.9"
+
+[[audits.winapi-i686-pc-windows-gnu]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.4.0"
+
+[[audits.winapi-x86_64-pc-windows-gnu]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.4.0"
+
+[[audits.windows-targets]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.52.3"
+
+[[audits.windows_aarch64_gnullvm]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.52.3"
+
+[[audits.windows_aarch64_msvc]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.52.3"
+
+[[audits.windows_i686_gnu]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.52.3"
+
+[[audits.windows_i686_msvc]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.52.3"
+
+[[audits.windows_x86_64_gnu]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.52.3"
+
+[[audits.windows_x86_64_gnullvm]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.52.3"
+
+[[audits.windows_x86_64_msvc]]
+who = "Omar Carey"
+criteria = "safe-to-deploy"
+version = "0.52.3"

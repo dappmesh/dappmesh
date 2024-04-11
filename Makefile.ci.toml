@@ -1,0 +1,14 @@
+[tasks.ci-format]
+category = "CI - CHECK"
+dependencies = ["cargo-fmt"]
+
+[tasks.ci-check]
+category = "CI - CHECK"
+command = "cargo"
+args = ["check", "--locked", "--workspace"]
+
+[tasks.ci-clippy]
+category = "CI - CHECK"
+command = "cargo"
+env = { RUSTFLAGS = "--cfg dappmesh_unstable" }
+args = ["clippy", "--all-targets", "--tests", "--benches", "--examples","--bins", "--", "-D", "warnings"]

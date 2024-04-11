@@ -1,0 +1,29 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: dappmeshs.dappmesh.io
+spec:
+  group: dappmesh.io
+  names:
+    kind: DappMesh
+    listKind: DappMeshList
+    singular: dappmesh
+    plural: dappmeshs
+    shortNames:
+      - mesh
+      - meshs
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                name:
+                  type: string
+              required: [ "name" ]

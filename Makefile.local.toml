@@ -1,0 +1,192 @@
+# Setup
+[tasks.cargo-upgrade]
+private = true
+command = "cargo"
+args = ["upgrade", "--pinned"]
+
+[tasks.cargo-update]
+private = true
+command = "cargo"
+args = ["update"]
+
+[tasks.setup]
+category = "LOCAL USAGE"
+dependencies = ["cargo-upgrade", "cargo-update"]
+
+# Check
+[tasks.cargo-check]
+category = "LOCAL USAGE"
+command = "cargo"
+env = { RUSTFLAGS = "--cfg dappmesh_unstable" }
+args = ["check", "--workspace"]
+
+[tasks.cargo-fmt]
+category = "LOCAL USAGE"
+command = "cargo"
+args = ["fmt", "--all", "--check"]
+
+[tasks.cargo-clippy]
+category = "LOCAL USAGE"
+command = "cargo"
+env = { RUSTFLAGS = "--cfg dappmesh_unstable" }
+args = ["clippy", "--all-targets", "--all-features", "--", "-D", "warnings"]
+
+[tasks.check]
+category = "LOCAL USAGE"
+dependencies = ["cargo-check", "cargo-fmt", "cargo-clippy"]
+
+# Clean
+[tasks.clean]
+category = "LOCAL USAGE"
+command = "cargo"
+args = ["clean"]
+
+# Quick
+[tasks.quick]
+category = "LOCAL USAGE"
+command = "cargo"
+args = ["build", "${@}"]
+
+# Docker
+[tasks.docker-resources]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+TARGET_DIR = set "./target/debug"
+DOCKER_RESOURCES_DIR = set "./docker/local/bin"
+
+binaries = array "dapp-domain-operator" "dapp-mesh-operator" "dapp-product-operator"
+
+mkdir ${DOCKER_RESOURCES_DIR}
+for binary in ${binaries}
+    source = set ${TARGET_DIR}/${binary}
+    target = set ${DOCKER_RESOURCES_DIR}/${binary}
+    cp ${source} ${target}
+end
+'''
+
+[tasks.docker-build]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+binaries = array "dapp-domain-operator" "dapp-mesh-operator" "dapp-product-operator"
+
+for binary in ${binaries}
+    docker_dir = set "./docker/local"
+    build_arg = set "TARGET_BIN=${binary}"
+    file = set "${docker_dir}/Dockerfile"
+    tag = set "ghcr.io/dappmesh/${binary}:latest-dev"
+    exec docker buildx build --platform linux/amd64 --target dev-local --build-arg ${build_arg} --file ${file} --tag ${tag} ${docker_dir}
+end
+'''
+
+[tasks.docker-push]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+binaries = array "dapp-domain-operator" "dapp-mesh-operator" "dapp-product-operator"
+
+for binary in ${binaries}
+    tag = set "ghcr.io/dappmesh/${binary}:latest-dev"
+    exec docker push ${tag}
+end
+'''
+
+[tasks.docker-clean]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+DOCKER_RESOURCES_DIR = set "./docker/local/bin"
+rm -r ${DOCKER_RESOURCES_DIR}
+'''
+
+[tasks.docker]
+category = "LOCAL USAGE"
+dependencies = ["docker-resources", "docker-build", "docker-push", "docker-clean"]
+
+# Kubernetes
+[tasks.k8s-base-create]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl apply -f ./manifests/platform/crds
+exec kubectl create namespace dappmesh
+'''
+
+[tasks.k8s-base-delete]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl delete crds/dappmeshs.dappmesh.io
+exec kubectl delete crds/dappdomains.dappmesh.io
+exec kubectl delete crds/dappproducts.dappmesh.io
+exec kubectl delete namespaces/dappmesh
+'''
+
+[tasks.k8s-platform-create]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl apply -f ./manifests/platform/operators
+'''
+
+[tasks.k8s-platform-delete]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl delete deployments/dapp-domain-operator -n dappmesh
+exec kubectl delete deployments/dapp-mesh-operator -n dappmesh
+exec kubectl delete deployments/dapp-product-operator -n dappmesh
+exec kubectl delete clusterrolebindings/dapp-domain-operator
+exec kubectl delete clusterrolebindings/dapp-mesh-operator
+exec kubectl delete clusterrolebindings/dapp-product-operator
+exec kubectl delete clusterroles/dapp-domain-operator
+exec kubectl delete clusterroles/dapp-mesh-operator
+exec kubectl delete clusterroles/dapp-product-operator
+exec kubectl delete serviceaccounts/dapp-domain-operator -n dappmesh
+exec kubectl delete serviceaccounts/dapp-mesh-operator -n dappmesh
+exec kubectl delete serviceaccounts/dapp-product-operator -n dappmesh
+'''
+
+[tasks.k8s-app-create]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl apply -f ./manifests/app/mesh
+exec kubectl apply -f ./manifests/app/domain
+exec kubectl apply -f ./manifests/app/product
+'''
+
+[tasks.k8s-app-delete]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl delete dappproducts/dapp-product-sales-order -n dappmesh
+exec kubectl delete dappdomains/dapp-domain-sales -n dappmesh
+exec kubectl delete dappmeshs/dapp-mesh-controller -n dappmesh
+'''
+
+# Build
+[tasks.build]
+category = "LOCAL USAGE"
+command = "cargo"
+env = { RUSTFLAGS = "--cfg dappmesh_unstable" }
+args = ["build", "--release", "${@}"]
+
+# Default
+[tasks.default]
+category = "LOCAL USAGE"
+clear = true
+dependencies = ["check", "test", "quick"]
+
+# Unit Test
+[tasks.test]
+category = "LOCAL USAGE"
+command = "cargo"
+args = ["test"]
+
+# Integration Test
+[tasks.integration-test]
+category = "LOCAL USAGE"
+command = "cargo"
+args = ["test", "--", "--ignored"]

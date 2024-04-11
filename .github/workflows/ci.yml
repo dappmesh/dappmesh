@@ -1,0 +1,147 @@
+name: Continuous integration
+
+run-name: "CI run '${{ github.head_ref || github.ref_name }}'"
+
+on:
+  push:
+    branches:
+      - main
+      - '**-**'
+  pull_request:
+  merge_group:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+
+  test:
+    name: Check Tests
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Install stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.75.0
+
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Setup cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install cargo-make
+        run: cargo install --debug --locked cargo-make
+
+      - name: Build
+        run: cargo build
+
+      - name: Check Unit Tests
+        run: cargo make test
+
+      - name: Setup K8s test cluster
+        uses: nolar/setup-k3d-k3s@v1
+        with:
+          version: v1.24
+          k3d-name: kube
+          k3d-args: "--no-lb --no-rollback --k3s-arg --disable=traefik,servicelb,metrics-server@server:*"
+      
+      - name: Install CRDs
+        run: kubectl apply -f manifests/crds/
+      
+      - name: Check Integration Tests
+        run: cargo make integration-test
+
+  check:
+    name: Check workspace
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Install stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.75.0
+
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Setup cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get -y update
+
+      - name: Install cargo-make
+        run: cargo install --debug --locked cargo-make
+
+      - name: Check workspace
+        run: cargo make ci-check
+
+  check-dependencies:
+    name: Check dependencies
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Install stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.75.0
+          components: rustfmt
+
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Setup cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install cargo-deny
+        run: cargo install --debug --locked cargo-deny
+
+      - name: Install cargo-vet
+        run: cargo install --debug --locked cargo-vet
+
+      - name: Check dependencies for known issues
+        run: cargo deny check
+
+      - name: Check dependencies for untrusted sources
+        run: cargo vet
+
+      - name: Dependency check failure
+        if: failure()
+        run: |
+          echo "## :warning: Dependency check failed" >> $GITHUB_STEP_SUMMARY
+          echo "See instructions in the [supply chain security process](https://github.com/datadiver-cloud/datadiver/blob/main/supply-chain/README.md#Process)." >> $GITHUB_STEP_SUMMARY
+
+
+  format-and-lint:
+    name: Check Format and Lint
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Install stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.75.0
+          components: clippy, rustfmt
+
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Setup cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get -y update
+
+      - name: Install cargo-make
+        run: cargo install --debug --locked cargo-make
+
+      - name: Check clippy
+        run: cargo make ci-clippy
+
+      - name: Check format
+        run: cargo make ci-format
