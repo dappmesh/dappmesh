@@ -36,11 +36,3 @@ docker: quick
 .PHONY: build
 build: check-deps
 	cargo make build
-
-.PHONY: k8s-create
-k8s-create:
-	cargo make k8s-create
-
-.PHONY: k8s-delete
-k8s-delete:
-	cargo make k8s-delete
