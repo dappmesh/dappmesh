@@ -1,10 +1,35 @@
 # Rust Data Mesh Framework
 
-## **Important:**
+**DappMesh** is a framework for creating cloud-native data mesh distributed applications declaratively.
 
-Read the :triangular_flag_on_post: [How to Contribute](./CONTRIBUTING.md) section before modifying the code.
+At its core, DappMesh embraces the principles of Data Mesh by **decentralizing data ownership** and management across **domain-oriented data product** applications.
+This is achieved through a distributed architecture that implements Kubernetes Operator Framework to manage a specific Data Mesh component as a custom resource.
+In addition, each **data product** is a distributed system that contains multiple operators managing storage, processing, **federated governance**, and **self-service data endpoints**.
 
-## Local Development Environment Setup
+This framework is designed for organizations looking to implement Data Mesh in a Kubernetes environment, providing a scalable, flexible solution to meet the complex demands of modern data management.
+
+## Vision
+
+- Energy Efficient Data Platform.
+- High-quality Data. Its not a data swamp.
+- Rust-powered.
+- Cloud Native.
+- Infrastructure agnostic.
+
+## Architecture
+
+- [Composite Operator Mesh](docs/architecture/operator-mesh.md)
+- [Data Product](docs/architecture/data-product.md)
+- [Data Application Model](docs/architecture/application-model.md)
+
+## Components
+
+- [Mesh Operator](docs/project/mesh-operator.md)
+- [Domain Operator](docs/project/domain-operator.md)
+- [Product Operator](docs/project/product-operator.md)
+- [Platform](docs/project/platform.md)
+
+## Using DappMesh
 
 ### Requirements
 
@@ -103,10 +128,9 @@ Then run the following command to run your current changes against the cluster c
 cargo build && mirrord exec -t deploy/{name of your operator deployment} --steal ./target/debug/{bin}
 ```
 
+## Contributing
 
-## Roadmap
-
-[MVP Roadmap](./docs/roadmap.md)
+:triangular_flag_on_post: Read the [How to Contribute](./CONTRIBUTING.md) section before modifying the code.
 
 ## Resources
 
