@@ -11,4 +11,4 @@ args = ["check", "--locked", "--workspace"]
 category = "CI - CHECK"
 command = "cargo"
 env = { RUSTFLAGS = "--cfg dappmesh_unstable" }
-args = ["clippy", "--all-targets", "--tests", "--benches", "--examples","--bins", "--", "-D", "warnings"]
+args = ["clippy", "--all-targets", "--tests", "--benches", "--examples", "--bins", "--", "-D", "warnings"]

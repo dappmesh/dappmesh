@@ -1,8 +1,8 @@
 use kube::{runtime::controller::Action, ResourceExt};
 use std::sync::Arc;
 
-use dapp_product_operator::{crd::DappProduct, operator::ProductOperatorController};
 use dapp_platform::core::operator::{Operator, OperatorContext, OperatorController, OperatorError};
+use dapp_product_operator::{crd::DappProduct, operator::ProductOperatorController};
 
 #[tokio::main]
 async fn main() {
