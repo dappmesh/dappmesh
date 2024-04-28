@@ -109,8 +109,8 @@ dependencies = ["docker-resources", "docker-build", "docker-push", "docker-clean
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
+exec kubectl apply -f ./manifests/platform/base
 exec kubectl apply -f ./manifests/platform/crds
-exec kubectl create namespace dappmesh
 '''
 
 [tasks.k8s-base-delete]

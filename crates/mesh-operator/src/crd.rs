@@ -8,7 +8,7 @@ use dapp_platform::core::operator::OperatorResource;
 	CustomResource, Serialize, Deserialize, Default, Debug, PartialEq, Eq, Clone, JsonSchema,
 )]
 #[kube(
-	doc = "DappMesh controller custom resource.",
+	doc = "DappMesh mesh controller custom resource.",
 	group = "dappmesh.io",
 	version = "v1alpha1",
 	kind = "DappMesh",
@@ -26,3 +26,34 @@ pub struct DappMeshSpec {
 }
 
 impl OperatorResource for DappMesh {}
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+	use chrono::Utc;
+	use k8s_openapi::apimachinery::pkg::apis::meta::v1::Time;
+	use kube::{Resource, ResourceExt};
+
+	impl DappMesh {
+		pub fn test_instance() -> Self {
+			let mut mesh = DappMesh::new("test_instance", DappMeshSpec::default());
+			mesh.meta_mut().namespace = Some("test_namespace".to_string());
+			mesh
+		}
+
+		pub fn finalize(mut self, finalizer: String) -> Self {
+			self.finalizers_mut().push(finalizer);
+			self
+		}
+
+		pub fn remove_finalizer(mut self) -> Self {
+			self.meta_mut().finalizers = None;
+			self
+		}
+
+		pub fn deletion_timestamp(mut self) -> Self {
+			self.meta_mut().deletion_timestamp = Some(Time(Utc::now()));
+			self
+		}
+	}
+}

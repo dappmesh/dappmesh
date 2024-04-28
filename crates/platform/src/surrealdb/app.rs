@@ -9,9 +9,7 @@ use kube::{
 };
 
 use super::{
-	config::SurrealDBConfig,
-	service::SurrealDBService,
-	service_account::SurrealDBServiceAccount,
+	config::SurrealDBConfig, service::SurrealDBService, service_account::SurrealDBServiceAccount,
 	statefulset::SurrealDBStatefulSet,
 };
 
@@ -130,5 +128,366 @@ impl SurrealDBApp {
 		}
 
 		Ok(())
+	}
+}
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+	use hyper::{Request, Response, StatusCode};
+	use k8s_openapi::api::{apps::v1::StatefulSet, core::v1::PersistentVolumeClaim};
+	use kube::{
+		api::{ListMeta, ObjectList, TypeMeta},
+		client::Body,
+		Error,
+	};
+	use serde_json::to_vec;
+
+	const TEST_NAME: &str = "test-name";
+	const TEST_NAME_PREFIXED: &str = "test-name-db";
+	const TEST_NAMESPACE: &str = "test-namespace";
+
+	type MockedKubeApiServerHandle = tower_test::mock::Handle<Request<Body>, Response<Body>>;
+
+	pub struct MockedKubeApiServer(MockedKubeApiServerHandle);
+
+	pub fn mock_client() -> (Client, MockedKubeApiServer) {
+		let (mocked_service, handle) = tower_test::mock::pair();
+
+		let mock_client = Client::new(mocked_service, "default");
+
+		(mock_client, MockedKubeApiServer(handle))
+	}
+
+	fn mock_response(data: Vec<u8>) -> Response<Body> {
+		Response::builder().status(StatusCode::OK).body(Body::from(data)).unwrap()
+	}
+
+	pub enum Scenario {
+		CreateResources(bool),
+		DeleteResources(bool),
+	}
+
+	impl MockedKubeApiServer {
+		pub fn run(self, scenario: Scenario) -> tokio::task::JoinHandle<MockedKubeApiServer> {
+			tokio::spawn(async move {
+				match scenario {
+					Scenario::CreateResources(creating_resources) => self
+						.handle_list_service_accounts(creating_resources)
+						.await
+						.unwrap()
+						.handle_create_service_account()
+						.await
+						.unwrap()
+						.handle_list_statefulset(creating_resources)
+						.await
+						.unwrap()
+						.handle_create_statefulset()
+						.await
+						.unwrap()
+						.handle_list_service(creating_resources)
+						.await
+						.unwrap()
+						.handle_create_service()
+						.await
+						.unwrap(),
+					Scenario::DeleteResources(creating_resources) => self
+						.handle_list_service(creating_resources)
+						.await
+						.unwrap()
+						.handle_delete_service()
+						.await
+						.unwrap()
+						.handle_list_statefulset(creating_resources)
+						.await
+						.unwrap()
+						.handle_delete_statefulset()
+						.await
+						.unwrap()
+						.handle_list_pvc(creating_resources)
+						.await
+						.unwrap()
+						.handle_delete_pvc()
+						.await
+						.unwrap()
+						.handle_list_service_accounts(creating_resources)
+						.await
+						.unwrap()
+						.handle_delete_service_account()
+						.await
+						.unwrap(),
+				}
+			})
+		}
+		pub async fn handle_list_service_accounts(
+			mut self,
+			creating_resources: bool,
+		) -> Result<Self, Error> {
+			let (request, send) = self.0.next_request().await.expect("Service not called");
+			assert_eq!(request.method(), &hyper::Method::GET);
+			assert_eq!(
+				request.uri().to_string(),
+				format!(
+					"/api/v1/namespaces/{}/serviceaccounts?&labelSelector=part-of%3D{}",
+					TEST_NAMESPACE, TEST_NAME_PREFIXED
+				)
+			);
+
+			let items: Vec<ServiceAccount> = if creating_resources {
+				vec![]
+			} else {
+				let sa = ServiceAccount::default();
+				vec![sa]
+			};
+
+			let list = ObjectList {
+				types: TypeMeta::default(),
+				metadata: ListMeta::default(),
+				items,
+			};
+
+			let response = to_vec(&list).unwrap();
+			let mock_response = mock_response(response);
+			send.send_response(mock_response);
+
+			Ok(self)
+		}
+
+		pub async fn handle_create_service_account(mut self) -> Result<Self, Error> {
+			let (request, send) = self.0.next_request().await.expect("Service not called");
+			assert_eq!(request.method(), &hyper::Method::POST);
+			assert_eq!(
+				request.uri().to_string(),
+				format!("/api/v1/namespaces/{}/serviceaccounts?", TEST_NAMESPACE)
+			);
+
+			let response = to_vec(&ServiceAccount::default()).unwrap();
+			let mock_response = mock_response(response);
+			send.send_response(mock_response);
+
+			Ok(self)
+		}
+
+		pub async fn handle_list_statefulset(
+			mut self,
+			creating_resources: bool,
+		) -> Result<Self, Error> {
+			let (request, send) = self.0.next_request().await.expect("Service not called");
+			assert_eq!(request.method(), &hyper::Method::GET);
+			assert_eq!(
+				request.uri().to_string(),
+				format!(
+					"/apis/apps/v1/namespaces/{}/statefulsets?&labelSelector=part-of%3D{}",
+					TEST_NAMESPACE, TEST_NAME_PREFIXED
+				)
+			);
+
+			let items: Vec<StatefulSet> = if creating_resources {
+				vec![]
+			} else {
+				let statefulset = StatefulSet::default();
+				vec![statefulset]
+			};
+
+			let list = ObjectList {
+				types: TypeMeta::default(),
+				metadata: ListMeta::default(),
+				items,
+			};
+
+			let response = to_vec(&list).unwrap();
+			let mock_response = mock_response(response);
+			send.send_response(mock_response);
+
+			Ok(self)
+		}
+
+		pub async fn handle_create_statefulset(mut self) -> Result<Self, Error> {
+			let (request, send) = self.0.next_request().await.expect("Service not called");
+			assert_eq!(request.method(), &hyper::Method::POST);
+			assert_eq!(
+				request.uri().to_string(),
+				format!("/apis/apps/v1/namespaces/{}/statefulsets?", TEST_NAMESPACE)
+			);
+
+			let response = to_vec(&StatefulSet::default()).unwrap();
+			let mock_response = mock_response(response);
+			send.send_response(mock_response);
+
+			Ok(self)
+		}
+
+		pub async fn handle_list_service(
+			mut self,
+			creating_resources: bool,
+		) -> Result<Self, Error> {
+			let (request, send) = self.0.next_request().await.expect("Service not called");
+			assert_eq!(request.method(), &hyper::Method::GET);
+			assert_eq!(
+				request.uri().to_string(),
+				format!(
+					"/api/v1/namespaces/{}/services?&labelSelector=part-of%3D{}",
+					TEST_NAMESPACE, TEST_NAME_PREFIXED
+				)
+			);
+
+			let items: Vec<Service> = if creating_resources {
+				vec![]
+			} else {
+				let service = Service::default();
+				vec![service]
+			};
+
+			let list = ObjectList {
+				types: TypeMeta::default(),
+				metadata: ListMeta::default(),
+				items,
+			};
+
+			let response = to_vec(&list).unwrap();
+			let mock_response = mock_response(response);
+			send.send_response(mock_response);
+
+			Ok(self)
+		}
+
+		pub async fn handle_create_service(mut self) -> Result<Self, Error> {
+			let (request, send) = self.0.next_request().await.expect("Service not called");
+			assert_eq!(request.method(), &hyper::Method::POST);
+			assert_eq!(
+				request.uri().to_string(),
+				format!("/api/v1/namespaces/{}/services?", TEST_NAMESPACE)
+			);
+
+			let response = to_vec(&Service::default()).unwrap();
+			let mock_response = mock_response(response);
+			send.send_response(mock_response);
+
+			Ok(self)
+		}
+
+		pub async fn handle_delete_service(mut self) -> Result<Self, Error> {
+			let (request, send) = self.0.next_request().await.expect("Service not called");
+			assert_eq!(request.method(), &hyper::Method::DELETE);
+			assert_eq!(
+				request.uri().to_string(),
+				format!("/api/v1/namespaces/{}/services/?", TEST_NAMESPACE)
+			);
+
+			let response = to_vec(&Service::default()).unwrap();
+			let mock_response = mock_response(response);
+			send.send_response(mock_response);
+
+			Ok(self)
+		}
+
+		pub async fn handle_delete_statefulset(mut self) -> Result<Self, Error> {
+			let (request, send) = self.0.next_request().await.expect("Service not called");
+			assert_eq!(request.method(), &hyper::Method::DELETE);
+			assert_eq!(
+				request.uri().to_string(),
+				format!("/apis/apps/v1/namespaces/{}/statefulsets/?", TEST_NAMESPACE)
+			);
+
+			let response = to_vec(&StatefulSet::default()).unwrap();
+			let mock_response = mock_response(response);
+			send.send_response(mock_response);
+
+			Ok(self)
+		}
+
+		pub async fn handle_list_pvc(mut self, creating_resources: bool) -> Result<Self, Error> {
+			let (request, send) = self.0.next_request().await.expect("Service not called");
+			assert_eq!(request.method(), &hyper::Method::GET);
+			assert_eq!(
+				request.uri().to_string(),
+				format!(
+					"/api/v1/namespaces/{}/persistentvolumeclaims?&labelSelector=part-of%3D{}",
+					TEST_NAMESPACE, TEST_NAME_PREFIXED
+				)
+			);
+
+			let items: Vec<PersistentVolumeClaim> = if creating_resources {
+				vec![]
+			} else {
+				let pvc = PersistentVolumeClaim::default();
+				vec![pvc]
+			};
+
+			let list = ObjectList {
+				types: TypeMeta::default(),
+				metadata: ListMeta::default(),
+				items,
+			};
+
+			let response = to_vec(&list).unwrap();
+			let mock_response = mock_response(response);
+			send.send_response(mock_response);
+
+			Ok(self)
+		}
+
+		pub async fn handle_delete_pvc(mut self) -> Result<Self, Error> {
+			let (request, send) = self.0.next_request().await.expect("Service not called");
+			assert_eq!(request.method(), &hyper::Method::DELETE);
+			assert_eq!(
+				request.uri().to_string(),
+				format!("/api/v1/namespaces/{}/persistentvolumeclaims/?", TEST_NAMESPACE,)
+			);
+
+			let response = to_vec(&PersistentVolumeClaim::default()).unwrap();
+			let mock_response = mock_response(response);
+			send.send_response(mock_response);
+
+			Ok(self)
+		}
+
+		pub async fn handle_delete_service_account(mut self) -> Result<Self, Error> {
+			let (request, send) = self.0.next_request().await.expect("Service not called");
+			assert_eq!(request.method(), &hyper::Method::DELETE);
+			assert_eq!(
+				request.uri().to_string(),
+				format!("/api/v1/namespaces/{}/serviceaccounts/?", TEST_NAMESPACE)
+			);
+
+			let response = to_vec(&ServiceAccount::default()).unwrap();
+			let mock_response = mock_response(response);
+			send.send_response(mock_response);
+
+			Ok(self)
+		}
+	}
+
+	pub async fn timeout_after_1s(handle: tokio::task::JoinHandle<MockedKubeApiServer>) {
+		tokio::time::timeout(std::time::Duration::from_secs(1), handle)
+			.await
+			.expect("timeout on mock apiserver")
+			.expect("scenario succeeded");
+	}
+
+	#[tokio::test]
+	async fn create_resources_in_order_and_return_ok() {
+		let (client, fakeserver) = mock_client();
+		let surrdb_app =
+			SurrealDBApp::new(TEST_NAME.to_string(), TEST_NAMESPACE.to_string(), client);
+
+		let mockserver = fakeserver.run(Scenario::CreateResources(true));
+		let result = surrdb_app.create().await;
+		timeout_after_1s(mockserver).await;
+
+		assert!(matches!(result, Ok(())));
+	}
+
+	#[tokio::test]
+	async fn delete_resources_in_order_and_return_ok_in() {
+		let (client, fakeserver) = mock_client();
+		let surrdb_app =
+			SurrealDBApp::new(TEST_NAME.to_string(), TEST_NAMESPACE.to_string(), client);
+
+		let mockserver = fakeserver.run(Scenario::DeleteResources(false));
+		let result = surrdb_app.delete().await;
+		timeout_after_1s(mockserver).await;
+
+		assert!(matches!(result, Ok(())));
 	}
 }

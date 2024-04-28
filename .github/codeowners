@@ -1,0 +1,46 @@
+# Default owners for the repository
+* @rodrigoalvamat
+
+# Configuration for CI
+/.github/ @dappmesh/ci
+
+# Configuration for deployment
+.dockerignore @dappmesh/ci
+build.rs @dappmesh/ci
+/.cargo/ @dappmesh/ci
+Makefile @dappmesh/ci
+Makefile.* @dappmesh/ci
+
+# Configuration for Rust dependencies
+Cargo.lock @dappmesh/security
+Cargo.toml @dappmesh/security
+crates/domain-operator/Cargo.toml @dappmesh/security
+crates/mesh-operator/Cargo.toml @dappmesh/security
+crates/platform/Cargo.toml @dappmesh/security
+crates/product-operator/Cargo.toml @dappmesh/security
+cackle.toml @dappmesh/security
+supply-chain/* @dappmesh/security
+
+# Code and tests for Domain
+/crates/domain-operator/CARGO.md @dappmesh/mesh
+/crates/domain-operator/README.md @dappmesh/mesh
+/crates/domain-operator/src/ @dappmesh/mesh
+/crates/domain-operator/src/tests/ @dappmesh/mesh
+
+# Code and tests for Mesh
+/crates/mesh-operator/CARGO.md @dappmesh/mesh
+/crates/mesh-operator/README.md @dappmesh/mesh
+/crates/mesh-operator/src/ @dappmesh/mesh
+/crates/mesh-operator/src/tests/ @dappmesh/mesh
+
+# Code and tests for Platform
+/crates/platform/CARGO.md @dappmesh/mesh
+/crates/platform/README.md @dappmesh/mesh
+/crates/platform/src/ @dappmesh/mesh
+/crates/platform/src/tests/ @dappmesh/mesh
+
+# Code and tests for Product
+/crates/product-operator/CARGO.md @dappmesh/mesh
+/crates/product-operator/README.md @dappmesh/mesh
+/crates/product-operator/src/ @dappmesh/mesh
+/crates/product-operator/src/tests/ @dappmesh/mesh
