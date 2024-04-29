@@ -18,3 +18,9 @@
 | [Energy Efficiency across Programming Languages](https://greenlab.di.uminho.pt/wp-content/uploads/2017/09/paperSLE.pdf) | Academic Paper, 2017 |
 | [Sustainability with Rust](https://aws.amazon.com/blogs/opensource/sustainability-with-rust/) | AWS Blog, 2022 |
 | [Rust Fact vs. Fiction: 5 Insights from Google](https://opensource.googleblog.com/2023/06/rust-fact-vs-fiction-5-insights-from-googles-rust-journey-2022.html)| Google Blog, 2022 |
+
+## Rust Source Code 
+
+| Title | Category       |
+| - |----------------|
+| [Operator Reference](https://github.com/Pscheidl/rust-kubernetes-operator-example/tree/master) | Kubernetes API |
