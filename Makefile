@@ -25,14 +25,51 @@ check: check-deps
 clean: check-deps
 	cargo make clean
 
+# Build
 .PHONY: quick
 quick: check-deps
 	cargo make quick
 
+.PHONY: build
+build: check-deps
+	cargo make build
+
+# Docker
 .PHONY: docker
 docker: quick
 	cargo make docker
 
-.PHONY: build
-build: check-deps
-	cargo make build
+# Kubernetes create
+.PHONY: k8s-base-create
+k8s-base-create: quick
+	cargo make k8s-base-create
+
+.PHONY: k8s-platform-create
+k8s-platform-create: quick
+	cargo make k8s-platform-create
+
+.PHONY: k8s-app-create
+k8s-app-create: quick
+	cargo make k8s-app-create
+
+# Kubernetes delete
+.PHONY: k8s-app-delete
+k8s-app-create:
+	cargo make k8s-app-delete
+
+.PHONY: k8s-platform-delete
+k8s-platform-create:
+	cargo make k8s-platform-delete
+
+.PHONY: k8s-base-delete
+k8s-base-delete:
+	cargo make k8s-base-delete
+
+# Tests
+.PHONY: test
+test: quick
+	cargo make test
+
+.PHONY: integration-test
+integration-test: quick
+	cargo make integration-test

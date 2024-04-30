@@ -1,9 +1,4 @@
 # Setup
-[tasks.cargo-upgrade]
-private = true
-command = "cargo"
-args = ["upgrade", "--pinned"]
-
 [tasks.cargo-update]
 private = true
 command = "cargo"
@@ -11,7 +6,7 @@ args = ["update"]
 
 [tasks.setup]
 category = "LOCAL USAGE"
-dependencies = ["cargo-upgrade", "cargo-update"]
+dependencies = ["cargo-update"]
 
 # Check
 [tasks.cargo-check]
@@ -120,6 +115,7 @@ script = '''
 exec kubectl delete crds/dappmeshs.dappmesh.io
 exec kubectl delete crds/dappdomains.dappmesh.io
 exec kubectl delete crds/dappproducts.dappmesh.io
+exec kubectl patch namespaces/dappmesh -p '{"metadata":{"finalizers":[]}}' --type=merge
 exec kubectl delete namespaces/dappmesh
 '''
 
