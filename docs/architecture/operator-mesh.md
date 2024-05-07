@@ -6,13 +6,13 @@ The goal of using the [Kubernetes Operator Framework](https://operatorframework.
 
 For this purpose, we are using [kube.rs](https://kube.rs/), a [Rust](https://www.rust-lang.org/) client and controller-runtime for Kubernetes, hosted by [CNCF](https://www.cncf.io/).
 
-- **Mesh Operator:** It is responsible for managing the metadata database and provisioning the core infrastructure, such as the service mesh, certificate manager, identity management, and monitoring system. Additionally, it can synchronize inter-mesh metadata in multi-cluster scenarios.
+- **Mesh Operator:** It is responsible for managing the metadata database and provisioning the core infrastructure, such as the service mesh, certificate manager, key vault, identity management, and monitoring system. Additionally, it can synchronize inter-mesh metadata in multi-cluster scenarios.
 
 
 - **Domain Operator:** An admission controller enforces the governance, security, policies, and validation of domain custom resources within the mesh. Similarly, the domain operator manages governance over data products within the domain.
 
 
-- **Data Product Operator:** This operator coordinates the activities of its sub-operators within the data product such as the governance operator (IAM, security, policies), processing operator (APIs, orchestration, pipelines), and storage operator (operational, analytical, block storage, etc.).
+- **Data Product Operator:** This operator manages the [application model's](./application-model.md) custom resources, such as schemas, contracts, and flows. Additionally, it provisions and controls the product infrastructure, including storage (operational, analytics, block) and processing (pipelines, orchestration, service APIs).
 
 ```mermaid
 ---
