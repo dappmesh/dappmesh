@@ -12,7 +12,7 @@ For this purpose, we are using [kube.rs](https://kube.rs/), a [Rust](https://www
 - **Domain Operator:** An admission controller enforces the governance, security, policies, and validation of domain custom resources within the mesh. Similarly, the domain operator manages governance over data products within the domain.
 
 
-- **Data Product Operator:** This operator manages the [application model's](./application-model.md) custom resources, such as schemas, contracts, and flows. Additionally, it provisions and controls the product infrastructure, including storage (operational, analytics, block) and processing (pipelines, orchestration, service APIs).
+- **Data Product Operator:** This operator manages the [application model's](./application-model.md) custom resources, such as schemas, contracts, and flows. Additionally, it provisions and controls the product infrastructure, including storage (operational, analytics, object storage) and processing (pipelines, orchestration, service APIs).
 
 ```mermaid
 ---
