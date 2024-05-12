@@ -2,6 +2,8 @@
 
 The DappMesh Application Model simplifies the provisioning of Kubernetes cluster infrastructure, abstracts the logical components of the data mesh architecture, and implements the data product development model.
 
+![DappMesh Data Product Project Structure](../images/data-product-project.png)
+
 ## Data Quantum
 
 According to Zhamak Dehghani's definition in the book [Data Mesh](https://learning.oreilly.com/library/view/data-mesh/9781492092384), *"a data quantum is the foundational unit of a data mesh architecture. It holds the domain-oriented data and the code that performs the necessary data transformations and shares the data and the policies governing the data."*
@@ -95,6 +97,7 @@ title: Data Application Model
 ---
 flowchart TB
     dataUse -.- dataMotion
+    dataMotion -.- dataRest
     
     subgraph dataUse[Data in Use]
         direction TB
@@ -147,6 +150,19 @@ flowchart TB
             scheduler[Scheduler]
             workflows[Workflows]
             transactions[Transactions]
+        end
+    end
+    
+    subgraph dataRest[Data at Rest]
+        direction TB
+        
+        subgraph connector[Source and Sync Connectors]
+            operational -.- analytics
+            analytics -.- objectStorage
+            
+            operational[(Operational Storage)]
+            analytics[(Analytics Storage)]
+            objectStorage[(Object Storage)]
         end
     end
 ```
