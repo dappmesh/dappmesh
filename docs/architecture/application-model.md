@@ -1,8 +1,14 @@
 # Data Application Model Framework
 
-The DappMesh Application Model simplifies the provisioning of Kubernetes cluster infrastructure, abstracts the logical components of the data mesh architecture, and implements the data product development model.
+The DappMesh Application Model enables developers and data engineers to declaratively create cloud-native data product applications, inspired by Kubernetes' powerful capabilities and infrastructure-agnostic approach.
+Similar to how Kubernetes provides CNI (Container Network Interface) and CSI (Container Storage Interface) APIs to ensure compatibility across different network and storage providers, DappMesh is designed to be infrastructure-agnostic. This flexibility ensures that DappMesh can seamlessly integrate with various underlying platforms.
+
+Using the DappMesh CLI, a user can define, deploy and orchestrate the entire lifecycle of a data product within a structured project hierarchy, such as the simplified example provided below:
 
 ![DappMesh Data Product Project Structure](../images/data-product-project.png)
+
+The following section explains how the DappMesh application model integrated the concept of a data quantum into the platform architecture.
+Each data quantum in DappMesh encapsulates not only the domain-specific data but also the code required for governance, orchestration, transformation, and integration.
 
 ## Data Quantum
 
@@ -53,7 +59,7 @@ stateDiagram-v2
 
 ### 2. Data in Motion
 
-- **Data Flow:** It is a Direct Acyclic Graph (DAG) that describes the sequence of activities that transforms the schema from the current state $S_n$ to the next state $S_n+1$.
+- **Data Flow:** It is a Direct Acyclic Graph (DAG) that describes the sequence of activities that transforms the schema from the current state $S_{n}$ to the next state $S_{n+1}$.
 
 
 - **Data Workflow:** A set of activities, retry policies, timers, triggers, and schedulers to orchestrate resilient data pipelines and distributed transactions.

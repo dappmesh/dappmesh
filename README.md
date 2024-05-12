@@ -33,11 +33,11 @@ This framework is designed for organizations looking to implement Data Mesh in a
 
 ### Requirements
 
-- Rust: [rustup](https://rustup.rs/)
-- Docker: [Docker](https://www.docker.com/products/docker-desktop), [Podman](https://podman.io/getting-started/installation), [Moby](https://mobyproject.org/), [Colima](https://github.com/abiosoft/colima), etc.
-- Docker [buildx plugin](https://github.com/docker/buildx).
-- Kubernetes distribution: [kind](https://kind.sigs.k8s.io/), [minikube](https://minikube.sigs.k8s.io/docs/), [k3d](https://k3d.io/), [k3s](https://k3s.io/), [microk8s](https://microk8s.io/), etc.
-- Kubernetes client: [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+- **Rust:** [rustup](https://rustup.rs/)
+- **Docker:** [Docker](https://www.docker.com/products/docker-desktop), [Podman](https://podman.io/getting-started/installation), [Moby](https://mobyproject.org/), [Colima](https://github.com/abiosoft/colima), etc.
+- **Docker Plugins:** [buildx plugin](https://github.com/docker/buildx).
+- **Kubernetes distribution:** [kind](https://kind.sigs.k8s.io/), [minikube](https://minikube.sigs.k8s.io/docs/), [k3d](https://k3d.io/), [k3s](https://k3s.io/), [microk8s](https://microk8s.io/), etc.
+- **Kubernetes client:** [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
 ### OS Specific Setup
 
