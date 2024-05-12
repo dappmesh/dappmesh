@@ -1,6 +1,6 @@
 # Data Product Architecture
 
-According to the [Data Mesh](https://learning.oreilly.com/library/view/data-mesh/9781492092384/) book by Zhamak Dehghani, a data product "is the smallest unit of architecture that can be independently deployed and managed".
+According to the [Data Mesh](https://learning.oreilly.com/library/view/data-mesh/9781492092384) book by Zhamak Dehghani, a data product "is the smallest unit of architecture that can be independently deployed and managed".
 The DappMesh [Data Application Model Framework](./application-model.md) abstracts the structural and logical components of data product architecture in terms of Kubernetes custom resources.
 
 ```mermaid
