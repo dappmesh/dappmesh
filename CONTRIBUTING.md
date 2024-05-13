@@ -1,6 +1,6 @@
 # Contributing to DappMesh
 
-Welcome, and thank you for considering contributing to DappMesh. Your support helps us build a better project. This document provides guidelines for contributing to DataDiver. By participating in this project, I want you to know that you agree to follow its terms.
+Welcome, and thank you for considering contributing to DappMesh. Your support helps us build a better project. This document provides guidelines for contributing to DappMesh. By participating in this project, I want you to know that you agree to follow its terms.
 
 ## Code of Conduct
 
