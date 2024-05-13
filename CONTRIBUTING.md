@@ -1,10 +1,10 @@
-# Contributing to DataDiver
+# Contributing to DappMesh
 
-Welcome, and thank you for considering contributing to DataDiver. Your support helps us build a better project. This document provides guidelines for contributing to DataDiver. By participating in this project, you agree to abide by its terms.
+Welcome, and thank you for considering contributing to DappMesh. Your support helps us build a better project. This document provides guidelines for contributing to DataDiver. By participating in this project, I want you to know that you agree to follow its terms.
 
 ## Code of Conduct
 
-DataDivers are committed to fostering a welcoming community. [The Code of Conduct](./CODE_OF_CONDUCT.md) outlines our expectations for participant behavior, as well as the consequences for unacceptable behavior. We ask that you read and follow our Code of Conduct in all your interactions within the project.
+DappMesh is committed to fostering a welcoming community. [The Code of Conduct](./CODE_OF_CONDUCT.md) outlines our expectations for participant behavior and the consequences for unacceptable behavior. We'd like you to read and follow our Code of Conduct in all your interactions within the project.
 
 ## How to Contribute
 
@@ -14,7 +14,7 @@ There are many ways to contribute to our project:
 - **Review source code changes**
 - **Contribute bug fixes or features**
 
-Before you start, please check out our [Issues](https://github.com/datadiver-cloud/datadiver/issues) and [Pull Requests](https://github.com/datadiver-cloud/datadiver/pulls) to see if your contribution might already be in progress. Also, consider discussing your idea in an issue before you start coding. 
+Before you start, please check out our [Issues](https://github.com/datadiver-cloud/datadiver/issues) and [Pull Requests](https://github.com/datadiver-cloud/datadiver/pulls) to see if your contribution might already be in progress. Also, consider discussing your idea in an issue before you start coding.
 
 ### Getting Started
 
@@ -41,7 +41,7 @@ Before you start, please check out our [Issues](https://github.com/datadiver-clo
 Bugs are tracked as GitHub issues. Create an issue on our repository and provide the following information:
 
 - **Use a clear and descriptive title** for the issue to identify the problem.
-- **Describe the exact steps** which reproduce the problem in as much detail as possible.
+- **Describe the exact steps** that reproduce the problem in as much detail as possible.
 - **Provide specific examples** to demonstrate the steps.
 
 ## Feature Requests
