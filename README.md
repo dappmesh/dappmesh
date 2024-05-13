@@ -10,11 +10,24 @@ This framework is designed for organizations looking to implement Data Mesh in a
 
 ## Vision
 
-- Energy Efficient Data Platform.
-- High-quality Data. It's not a data swamp.
-- Infrastructure agnostic.
-- Rust-powered.
-- Cloud Native.
+- **Energy Efficient Data Platform:** This requirement may seem opinionated and somewhat controversial, but we can establish some premises to achieve this goal.
+  1. Whenever choosing between programming languages or computing/storage systems, we select the option that combines performance and resource efficiency.
+  2. The platform will only consider technologies that fulfill all additional functional requirements.
+
+NOTE: You might want to check some concepts discussed in this AWS article about [Sustainability with Rust](https://aws.amazon.com/blogs/opensource/sustainability-with-rust).
+
+
+- **High-quality Data:** DappMesh is not a data swamp. According to the [Data Application Model](./docs/architecture/application-model.md), any data at rest, data in motion, or data in use must have a well-defined schema or metadata.
+
+
+- **Cloud Native:** Just as Kubernetes YAML and Helm charts serve as the blueprint for orchestrating distributed systems, DappMesh enables the structured design and deployment of data products.
+  In short, the desired state of a distributed data product application materializes through DappMesh.
+
+
+- **Infrastructure Agnostic:** This flexibility ensures that DappMesh can seamlessly integrate with various underlying platforms.
+
+
+- **Rust-powered:** [Why Rust is the most admired language among developers](https://github.blog/2023-08-30-why-rust-is-the-most-admired-language-among-developers/) :green_heart:
 
 ## Architecture
 
