@@ -54,7 +54,7 @@ The core team looks at Pull Requests on a regular basis. After feedback has been
 
 ## License
 
-By contributing to DataDiver, you agree that your contributions will be licensed under its [Apache License Version 2.0](./LICENSE).
+By contributing to DataDiver, you agree that your contributions will be licensed under its [Business Source License 1.1](./LICENSE).
 
 ## Acknowledgments
 
