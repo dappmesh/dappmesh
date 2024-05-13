@@ -1,6 +1,6 @@
 # Contributing to DappMesh
 
-Welcome, and thank you for considering contributing to DappMesh. Your support helps us build a better project. This document provides guidelines for contributing to DappMesh. By participating in this project, I want you to know that you agree to follow its terms.
+Welcome, and thank you for considering contributing to DappMesh. Your support helps us build a better project. This document provides guidelines for contributing to DappMesh. By participating in this project, we want you to know that you agree to follow its terms.
 
 ## Code of Conduct
 
@@ -14,7 +14,7 @@ There are many ways to contribute to our project:
 - **Review source code changes**
 - **Contribute bug fixes or features**
 
-Before you start, please check out our [Issues](https://github.com/datadiver-cloud/datadiver/issues) and [Pull Requests](https://github.com/datadiver-cloud/datadiver/pulls) to see if your contribution might already be in progress. Also, consider discussing your idea in an issue before you start coding.
+Before you start, please check out our [Issues](https://github.com/dappmesh/dappmesh/issues) and [Pull Requests](https://github.com/dappmesh/dappmesh/pulls) to see if your contribution might already be in progress. Also, consider discussing your idea in an issue before you start coding.
 
 ### Getting Started
 
@@ -54,7 +54,7 @@ The core team looks at Pull Requests on a regular basis. After feedback has been
 
 ## License
 
-By contributing to DataDiver, you agree that your contributions will be licensed under its [Business Source License 1.1](./LICENSE).
+By contributing to DappMesh, you agree that your contributions will be licensed under its [Business Source License 1.1](./LICENSE).
 
 ## Acknowledgments
 
