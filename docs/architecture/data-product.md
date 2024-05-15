@@ -59,8 +59,8 @@ flowchart LR
     subgraph storage[Storage]
         direction TB
 
-        operationalDatabase[(Operational OLTP)]
-        analyticsDatabase[(Analytics OLAP)]
+        operationalDatabase[(Operational)]
+        analyticsDatabase[(Analytics)]
         objectStorage[(Object Storage)]
 
         storageAPI[Storage API] --- operationalDatabase
@@ -106,10 +106,10 @@ flowchart LR
 - **Pipeline:** Unified stream and bach ingestion, CDC, and ETL provided by [Estuary](https://estuary.dev/product). Cloud-native stream processing with [Arroyo](https://www.arroyo.dev).
 
 
-- **Orchestration:** Schedule workflows, create durable state business logic, and code fault-tolerant activities with [Temporal](https://temporal.io).
+- **Orchestration:** Schedule workflows, create durable state business logic and code fault-tolerant activities with [Temporal](https://temporal.io).
 
 
-- **Service APIs:** Generate stream, gRPC, and REST data producers and consumers using Rust libraries. Capture using log-based CDC and 100+ builtin [Estuary](https://estuary.dev/product) connectors.
+- **Service APIs:** Generate stream, gRPC, and REST data producers/consumers using Rust libraries. Data capture using log-based CDC and 100+ built-in [Estuary](https://estuary.dev/product) connectors.
 
 ## 3. Storage Layer
 
