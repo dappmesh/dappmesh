@@ -1,4 +1,4 @@
-# Energy-Efficient Data Mesh Platform
+# Energy Efficient Data Mesh Platform
 
 **DappMesh** is a framework for creating cloud-native data mesh distributed applications declaratively.
 
