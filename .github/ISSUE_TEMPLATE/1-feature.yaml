@@ -26,7 +26,7 @@ body:
     attributes:
       label: Design and documentation reference
       description: Provide links to design and/or documentation if available.
-      placeholder: [Reference](url)
+      placeholder: "[Reference](url)"
       value: "[Reference name](url)"
   - type: textarea
     attributes:
