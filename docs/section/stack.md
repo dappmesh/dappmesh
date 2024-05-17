@@ -1,7 +1,5 @@
 # Technology Stack
 
-TODO: Create a page for each tool, platform, framework summarizing the key feautures aligned with the project requirements.
-
 | Category | Name | Language |
 | - | - | - |
 | Database | [SurrealDB](https://surrealdb.com/) | Rust |
@@ -16,7 +14,5 @@ TODO: Create a page for each tool, platform, framework summarizing the key feaut
 | Monitoring | [Prometheus](https://prometheus.io/) | Golang |
 | Monitoring | [Grafana](https://grafana.com/) | Typescript / Golang |
 | Packaging | [Helm Chart](https://helm.sh/) | Golang |
-| Containers/runtimes | [WasmEdge](https://wasmedge.org/) | Wasm[^1] |
+| Containers/runtimes | [WasmEdge](https://wasmedge.org/) | Wasm |
 | Containers/runtimes | [Wasmer](https://wasmer.io/) | Wasm |
-
-[^1]:  [How WASI Makes Containerization More Efficient](https://training.linuxfoundation.org/blog/how-wasi-makes-containerization-more-efficient/)
