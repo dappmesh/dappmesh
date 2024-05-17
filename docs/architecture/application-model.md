@@ -85,10 +85,10 @@ erDiagram
 
 ### 3. Data in Use
 
-- **Data Input Interfaces:** Integration connectors for external data sources, data products within the same mesh, and external data products. In addition, the data product interface includes the microservices APIs (GraphQL, REST, gRPC, etc.) to handle operational data transactions.
+- **Data Input Port:** Integration connectors for external data sources, data products within the same mesh, and external data products. In addition, the data product interface includes the microservices APIs (GraphQL, REST, gRPC, etc.) to handle operational data transactions.
 
 
-- **Data Output Interfaces:** Provides operational and analytics data sharing through microservices APIs (GraphQL, REST, gRPC, etc.). Also, it may accept federate access that allows clients to consume from the storage infrastructure.
+- **Data Output Port:** Provides operational and analytics data sharing through microservices APIs (GraphQL, REST, gRPC, etc.). Also, it may accept federate access that allows clients to consume from the storage infrastructure.
 
 
 - **Data Contract:** As specified by the [Data Contract Specification](https://datacontract.com), *"a data contract is a document that defines the structure, format, semantics, quality, and terms of use for exchanging data between a data provider and their consumers"*.
@@ -121,10 +121,10 @@ flowchart TB
         
         subgraph interfaces[Interfaces]
            direction LR
-           inputInterface -.- outputInterface
+           inputPort -.- outputPort
            
-           inputInterface(Input API)
-           outputInterface(Output API)
+           inputPort(Input Port)
+           outputPort(Output Port)
         end
     end
     
