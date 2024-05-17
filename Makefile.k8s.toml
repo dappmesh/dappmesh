@@ -1,0 +1,62 @@
+# Kubernetes
+[tasks.k8s-base-create]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl apply -f ./manifests/platform/base
+exec kubectl apply -f ./manifests/platform/crds
+'''
+
+[tasks.k8s-base-delete]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl delete crds/dappmeshs.dappmesh.io
+exec kubectl delete crds/dappdomains.dappmesh.io
+exec kubectl delete crds/dappproducts.dappmesh.io
+exec kubectl patch namespaces/dappmesh -p '{"metadata":{"finalizers":[]}}' --type=merge
+exec kubectl delete namespaces/dappmesh
+'''
+
+[tasks.k8s-platform-create]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl apply -f ./manifests/platform/operators
+'''
+
+[tasks.k8s-platform-delete]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl delete deployments/dapp-domain-operator -n dappmesh
+exec kubectl delete deployments/dapp-mesh-operator -n dappmesh
+exec kubectl delete deployments/dapp-product-operator -n dappmesh
+exec kubectl delete clusterrolebindings/dapp-domain-operator
+exec kubectl delete clusterrolebindings/dapp-mesh-operator
+exec kubectl delete clusterrolebindings/dapp-product-operator
+exec kubectl delete clusterroles/dapp-domain-operator
+exec kubectl delete clusterroles/dapp-mesh-operator
+exec kubectl delete clusterroles/dapp-product-operator
+exec kubectl delete serviceaccounts/dapp-domain-operator -n dappmesh
+exec kubectl delete serviceaccounts/dapp-mesh-operator -n dappmesh
+exec kubectl delete serviceaccounts/dapp-product-operator -n dappmesh
+'''
+
+[tasks.k8s-app-create]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl apply -f ./manifests/app/mesh
+exec kubectl apply -f ./manifests/app/domain
+exec kubectl apply -f ./manifests/app/product
+'''
+
+[tasks.k8s-app-delete]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl delete dappproducts/dapp-product-sales-order -n dappmesh
+exec kubectl delete dappdomains/dapp-domain-sales -n dappmesh
+exec kubectl delete dappmeshs/dapp-mesh-controller -n dappmesh
+'''
