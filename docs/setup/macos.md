@@ -11,5 +11,5 @@ mise install
 ```
 To start a local Kubernetes instance and container runtime, run the following command:
 ```console
-colima start --cpu 3 --memory 5 --runtime containerd --kubernetes
+colima start --cpu 4 --memory 8 --runtime containerd --kubernetes
 ```
