@@ -11,8 +11,9 @@ This framework is designed for organizations looking to implement Data Mesh in a
 ## Vision
 
 - **Energy Efficient Data Platform:** This requirement may seem opinionated and somewhat controversial, but we can establish some premises to achieve this goal.
-  1. Whenever choosing between programming languages or computing/storage systems, we select the option that combines performance and resource efficiency.
-  2. The platform will only consider technologies that fulfill all additional functional requirements.
+  1. A programming language or computing/storage system is considered **eligible** when it fulfills all functional requirements of a specific feature.
+  2. Whenever choosing between 2 **eligible** programming languages or computing/storage systems, we select the option that combines performance and resource efficiency to become the **standard**.
+  3. A **standard** can be replaced by an **eligible** that outperforms it.
 
 NOTE: You might want to check some concepts discussed in this AWS article about [Sustainability with Rust](https://aws.amazon.com/blogs/opensource/sustainability-with-rust).
 
