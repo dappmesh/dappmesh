@@ -1,48 +1,246 @@
-# Kubernetes
-[tasks.k8s-base-create]
+# Kubernetes base
+[tasks.k8s-infra-create]
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-exec kubectl apply -f ./manifests/platform/base
-exec kubectl apply -f ./manifests/platform/crds
+cm_run_task k8s-infra-namespaces-create
+cm_run_task k8s-infra-cert-manager-crds-create
+cm_run_task k8s-infra-cert-manager-create
+cm_run_task k8s-infra-trust-manager-create
+cm_run_task k8s-infra-trust-manager-wait
+cm_run_task k8s-infra-certificates-create
+cm_run_task k8s-infra-traefik-create
+cm_run_task k8s-infra-docker-registry-create
+cm_run_task k8s-infra-platform-create
 '''
 
-[tasks.k8s-base-delete]
+[tasks.k8s-infra-certificates-create]
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-exec kubectl delete crds/dappmeshs.dappmesh.io
-exec kubectl delete crds/dappdomains.dappmesh.io
-exec kubectl delete crds/dappproducts.dappmesh.io
-exec kubectl patch namespaces/dappmesh -p '{"metadata":{"finalizers":[]}}' --type=merge
-exec kubectl delete namespaces/dappmesh
+exec echo "Waiting for cert-manager-webhook pod to be ready..."
+exec kubectl wait --for=condition=Ready pod -l app=webhook --timeout=60s -n cert-manager
+exec kubectl apply -f ./manifests/infra/cert-manager/resources/
 '''
 
+[tasks.k8s-infra-cert-manager-create]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+values = set "./manifests/infra/cert-manager/helm/cert/values.yaml"
+exec helm repo add cert-manager https://charts.jetstack.io
+exec helm install -f ${values} cert-manager cert-manager/cert-manager --version 1.14.5 -n cert-manager
+'''
+
+[tasks.k8s-infra-cert-manager-crds-create]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/cert-manager.crds.yaml
+
+crd1 = set "certificates.cert-manager.io"
+crd2 = set "certificaterequests.cert-manager.io"
+crd3 = set "challenges.acme.cert-manager.io"
+crd4 = set "clusterissuers.cert-manager.io"
+crd5 = set "issuers.cert-manager.io"
+crd6 = set "orders.acme.cert-manager.io"
+
+crds = array ${crd1} ${crd2} ${crd3} ${crd4} ${crd5} ${crd6}
+for crd in ${crds}
+    exec echo "Waiting for CRD ${crd} to be established..."
+    exec kubectl wait --for=condition=Established --timeout=60s crd/${crd}
+end
+'''
+
+[tasks.k8s-infra-docker-registry-create]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl apply -f ./manifests/infra/registry/resources/
+values = set "./manifests/infra/registry/helm/values.yaml"
+exec helm repo add twuni https://helm.twun.io
+exec helm install -f ${values} docker-registry twuni/docker-registry --version 2.2.3 -n registry
+'''
+
+[tasks.k8s-infra-docker-registry-htpasswd]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec htpasswd -Bbn dappmesh dappmesh
+'''
+
+[tasks.k8s-infra-namespaces-create]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl create namespace cert-manager
+exec kubectl create namespace dappmesh
+exec kubectl create namespace registry
+exec kubectl create namespace traefik
+'''
+
+[tasks.k8s-infra-platform-create]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl apply -f ./manifests/platform/crd
+exec kubectl apply -f ./manifests/platform/secret
+'''
+
+[tasks.k8s-infra-traefik-create]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+values = set "./manifests/infra/traefik/helm/values.yaml"
+exec helm repo add traefik https://traefik.github.io/charts
+exec helm install -f ${values} traefik traefik/traefik --version 28.1.0 -n traefik
+exec kubectl apply -f ./manifests/infra/traefik/resources/
+'''
+
+[tasks.k8s-infra-trust-manager-create]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+values = set "./manifests/infra/cert-manager/helm/trust/values.yaml"
+exec helm install -f ${values} trust-manager cert-manager/trust-manager --version 0.10.0 -n cert-manager
+'''
+
+[tasks.k8s-infra-trust-manager-wait]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+service = set "trust-manager"
+namespace = set "cert-manager"
+jsonpath = set "jsonpath='{.subsets[*].addresses[*].ip}'"
+
+interval = calc 5 * 1000
+timeout = calc 60 * 1000
+now = current_time
+end_time = calc ${now} + ${timeout}
+
+while less_than ${now} ${end_time}
+    output = exec kubectl get endpoints ${service} -n ${namespace} -o ${jsonpath}
+    is_empty = eq ${output.stdout} ""
+    is_quotes = eq ${output.stdout} "''"
+    idle = set ${is_empty} or ${is_quotes}
+
+    echo Endpoint [ip=${output.stdout}, idle=${idle}]
+    if not ${idle}
+        echo Endpoint for service ${service} is active
+        sleep ${interval}
+        end_time = calc ${now} - 1000
+    else
+        echo Waiting for endpoint of service ${service} to be active...
+        sleep ${interval}
+        now = current_time
+    end
+end
+'''
+
+[tasks.k8s-infra-cert-export]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+cert = exec kubectl get secret registry-tls -n registry -o jsonpath='{.data.ca\.crt}'
+cert_decoded = base64_decode ${cert}
+exec sudo mkdir -p /etc/docker/certs.d/registry.dappmesh.local:5000/
+exec sudo echo ${cert_decoded} > /etc/docker/certs.d/registry.dappmesh.local:5000/ca.crt
+'''
+
+[tasks.k8s-infra-delete]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+cm_run_task k8s-infra-platform-delete
+cm_run_task k8s-infra-docker-registry-delete
+cm_run_task k8s-infra-traefik-delete
+cm_run_task k8s-infra-trust-manager-delete
+cm_run_task k8s-infra-cert-manager-delete
+'''
+
+[tasks.k8s-infra-cert-manager-delete]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec helm uninstall cert-manager -n cert-manager
+exec helm repo remove cert-manager
+exec kubectl delete -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/cert-manager.crds.yaml
+exec kubectl delete namespace cert-manager
+'''
+
+[tasks.k8s-infra-docker-registry-delete]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec helm uninstall docker-registry -n registry
+exec helm repo remove twuni
+exec kubectl delete -f ./manifests/infra/registry/resources/
+exec kubectl delete namespace registry
+'''
+
+[tasks.k8s-infra-platform-delete]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl delete -f ./manifests/platform/crd
+exec kubectl delete -f ./manifests/platform/secret
+exec kubectl delete namespace dappmesh
+'''
+
+[tasks.k8s-infra-traefik-delete]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl delete -f ./manifests/infra/traefik/resources/
+exec helm uninstall traefik -n traefik
+exec helm repo remove traefik
+
+exec kubectl delete crds/accesscontrolpolicies.hub.traefik.io
+exec kubectl delete crds/apiaccesses.hub.traefik.io
+exec kubectl delete crds/apiportals.hub.traefik.io
+exec kubectl delete crds/apiratelimits.hub.traefik.io
+exec kubectl delete crds/apis.hub.traefik.io
+exec kubectl delete crds/apiversions.hub.traefik.io
+exec kubectl delete crds/edgeingresses.hub.traefik.io
+exec kubectl delete crds/ingressroutes.traefik.io
+exec kubectl delete crds/ingressroutetcps.traefik.io
+exec kubectl delete crds/ingressrouteudps.traefik.io
+exec kubectl delete crds/middlewares.traefik.io
+exec kubectl delete crds/middlewaretcps.traefik.io
+exec kubectl delete crds/serverstransports.traefik.io
+exec kubectl delete crds/serverstransporttcps.traefik.io
+exec kubectl delete crds/tlsoptions.traefik.io
+exec kubectl delete crds/tlsstores.traefik.io
+exec kubectl delete crds/traefikservices.traefik.io
+
+exec kubectl delete namespace traefik
+'''
+
+[tasks.k8s-infra-trust-manager-delete]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+exec kubectl delete -f ./manifests/infra/cert-manager/resources/
+exec helm uninstall trust-manager -n cert-manager
+exec kubectl delete crds/bundles.trust.cert-manager.io
+'''
+
+# Kubernetes Platform
 [tasks.k8s-platform-create]
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-exec kubectl apply -f ./manifests/platform/operators
+exec kubectl apply -f ./manifests/platform/operator
 '''
 
 [tasks.k8s-platform-delete]
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-exec kubectl delete deployments/dapp-domain-operator -n dappmesh
-exec kubectl delete deployments/dapp-mesh-operator -n dappmesh
-exec kubectl delete deployments/dapp-product-operator -n dappmesh
-exec kubectl delete clusterrolebindings/dapp-domain-operator
-exec kubectl delete clusterrolebindings/dapp-mesh-operator
-exec kubectl delete clusterrolebindings/dapp-product-operator
-exec kubectl delete clusterroles/dapp-domain-operator
-exec kubectl delete clusterroles/dapp-mesh-operator
-exec kubectl delete clusterroles/dapp-product-operator
-exec kubectl delete serviceaccounts/dapp-domain-operator -n dappmesh
-exec kubectl delete serviceaccounts/dapp-mesh-operator -n dappmesh
-exec kubectl delete serviceaccounts/dapp-product-operator -n dappmesh
+exec kubectl delete -f ./manifests/platform/operator
 '''
 
+# Kubernetes Application
 [tasks.k8s-app-create]
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
@@ -56,7 +254,7 @@ exec kubectl apply -f ./manifests/app/product
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-exec kubectl delete dappproducts/dapp-product-sales-order -n dappmesh
-exec kubectl delete dappdomains/dapp-domain-sales -n dappmesh
-exec kubectl delete dappmeshs/dapp-mesh-controller -n dappmesh
+exec kubectl delete -f ./manifests/app/mesh
+exec kubectl delete -f ./manifests/app/domain
+exec kubectl delete -f ./manifests/app/product
 '''

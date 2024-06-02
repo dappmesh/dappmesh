@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: dappmesh-tls
+  namespace: cert-manager
+spec:
+  isCA: true
+  commonName: dappmesh-tls
+  secretName: dappmesh-tls
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: dappmesh-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

@@ -49,7 +49,7 @@ jobs:
           k3d-args: "--no-lb --no-rollback --k3s-arg --disable=traefik,servicelb,metrics-server@server:*"
       
       - name: Install CRDs
-        run: kubectl apply -f manifests/platform/crds/
+        run: kubectl apply -f manifests/platform/crd/
       
       - name: Check Integration Tests
         run: cargo make integration-test

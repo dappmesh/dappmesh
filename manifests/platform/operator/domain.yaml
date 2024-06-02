@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: dapp-mesh-operator
+  name: dapp-domain-operator
   namespace: dappmesh
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: dapp-mesh-operator
+  name: dapp-domain-operator
 rules:
   - apiGroups: [ "apps" ]
     resources: [ "statefulsets" ]
@@ -16,46 +16,48 @@ rules:
     resources: ["persistentvolumes", "persistentvolumeclaims", "pods", "serviceaccounts", "services"]
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
   - apiGroups: ["dappmesh.io"]
-    resources: ["dappmeshs"]
+    resources: ["dappdomains"]
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: dapp-mesh-operator
+  name: dapp-domain-operator
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: dapp-mesh-operator
+  name: dapp-domain-operator
 subjects:
   - kind: ServiceAccount
-    name: dapp-mesh-operator
+    name: dapp-domain-operator
     namespace: dappmesh
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: dapp-mesh-operator
-  name: dapp-mesh-operator
+    app: dapp-domain-operator
+  name: dapp-domain-operator
   namespace: dappmesh
 spec:
   selector:
     matchLabels:
-      app: dapp-mesh-operator
+      app: dapp-domain-operator
   template:
     metadata:
       labels:
-        app: dapp-mesh-operator
+        app: dapp-domain-operator
     spec:
       containers:
-        - image: ghcr.io/dappmesh/dapp-mesh-operator:latest-dev
+        - image: docker-registry.registry.svc:5000/dapp-domain-operator:latest-dev
           imagePullPolicy: "Always"
-          name: dapp-mesh-operator
+          name: dapp-domain-operator
           ports:
             - containerPort: 4418
           resources:
             limits:
               cpu: 300m
               memory: 200Mi
-      serviceAccountName: dapp-mesh-operator
+      imagePullSecrets:
+        - name: docker-registry-secret
+      serviceAccountName: dapp-domain-operator

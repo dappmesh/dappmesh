@@ -1,0 +1,6 @@
+crds:
+  keep: false
+
+secretTargets:
+  enabled: true
+  authorizedSecretsAll: true

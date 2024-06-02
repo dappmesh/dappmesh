@@ -1,5 +1,6 @@
 [tools]
-rust = '1.78.0'
-kubectl = '1.29.5'
 colima = '0.6.8'
+helm = '3.15.0'
+kubectl = '1.29.5'
 lima = '0.22.0'
+rust = '1.78.0'

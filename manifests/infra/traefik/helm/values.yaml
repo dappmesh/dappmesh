@@ -1,0 +1,26 @@
+additionalArguments:
+  - --entryPoints.registry.address: ":5000/tcp"
+  - --entryPoints.registry.http.tls: true
+  - --entryPoints.web.address: ":8000/tcp"
+  - --entryPoints.web.http.redirections.entryPoint.to: websecure
+  - --entryPoints.web.http.redirections.entryPoint.scheme: https
+  - --entryPoints.websecure.address: ":8443/tcp"
+  - --log.level: DEBUG
+
+ingressRoute:
+  dashboard:
+    enabled: false
+
+ports:
+  registry:
+    port: 5000
+    expose:
+      default: true
+    exposedPort: 5000
+    protocol: TCP
+    tls:
+      enabled: true
+
+service:
+  externalIPs:
+    - 192.168.0.101
