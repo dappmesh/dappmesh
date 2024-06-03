@@ -56,10 +56,12 @@ end
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-exec kubectl apply -f ./manifests/infra/registry/resources/
+exec kubectl apply -f ./manifests/infra/registry/resources/certificate.yaml
 values = set "./manifests/infra/registry/helm/values.yaml"
 exec helm repo add twuni https://helm.twun.io
 exec helm install -f ${values} docker-registry twuni/docker-registry --version 2.2.3 -n registry
+exec kubectl apply -f ./manifests/infra/registry/resources/transport.yaml
+exec kubectl apply -f ./manifests/infra/registry/resources/ingress.yaml
 '''
 
 [tasks.k8s-infra-docker-registry-htpasswd]
