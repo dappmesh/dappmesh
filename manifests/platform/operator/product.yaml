@@ -49,7 +49,7 @@ spec:
         app: dapp-product-operator
     spec:
       containers:
-        - image: docker-registry.registry.svc:5000/dapp-product-operator:latest-dev
+        - image: docker-registry.registry.svc.cluster.local:5000/dapp-product-operator:latest-dev
           imagePullPolicy: "Always"
           name: dapp-product-operator
           ports:

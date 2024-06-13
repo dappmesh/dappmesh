@@ -20,7 +20,7 @@ spec:
     - client auth
   dnsNames:
     - registry.dappmesh.local
-    - docker-registry.registry.svc
+    - docker-registry.registry.svc.cluster.local
   issuerRef:
     name: dappmesh-issuer
     kind: ClusterIssuer

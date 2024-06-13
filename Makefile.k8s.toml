@@ -116,6 +116,7 @@ namespace = set "cert-manager"
 jsonpath = set "jsonpath='{.subsets[*].addresses[*].ip}'"
 
 interval = calc 5 * 1000
+warmup = calc 10 * 1000
 timeout = calc 60 * 1000
 now = current_time
 end_time = calc ${now} + ${timeout}
@@ -129,7 +130,7 @@ while less_than ${now} ${end_time}
     echo Endpoint [ip=${output.stdout}, idle=${idle}]
     if not ${idle}
         echo Endpoint for service ${service} is active
-        sleep ${interval}
+        sleep ${warmup}
         end_time = calc ${now} - 1000
     else
         echo Waiting for endpoint of service ${service} to be active...
