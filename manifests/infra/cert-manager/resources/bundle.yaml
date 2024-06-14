@@ -1,0 +1,13 @@
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: dappmesh-bundle
+spec:
+  sources:
+    - useDefaultCAs: true
+    - secret:
+        name: dappmesh-tls
+        key: tls.crt
+  target:
+    configMap:
+      key: trust-bundle.pem

@@ -58,4 +58,6 @@ spec:
             limits:
               cpu: 300m
               memory: 200Mi
+      imagePullSecrets:
+        - name: docker-registry-secret
       serviceAccountName: dapp-domain-operator

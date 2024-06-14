@@ -40,9 +40,9 @@ docker: quick
 	cargo make docker
 
 # Kubernetes create
-.PHONY: k8s-base-create
-k8s-base-create: quick
-	cargo make k8s-base-create
+.PHONY: k8s-infra-create
+k8s-infra-create: quick
+	cargo make k8s-infra-create
 
 .PHONY: k8s-platform-create
 k8s-platform-create: quick
@@ -61,9 +61,9 @@ k8s-app-delete:
 k8s-platform-delete:
 	cargo make k8s-platform-delete
 
-.PHONY: k8s-base-delete
-k8s-base-delete:
-	cargo make k8s-base-delete
+.PHONY: k8s-infra-delete
+k8s-infra-delete:
+	cargo make k8s-infra-delete
 
 # Tests
 .PHONY: test

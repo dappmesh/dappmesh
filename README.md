@@ -138,8 +138,8 @@ For more commands, read the [Makefile](./Makefile) and [Makefile.toml](./Makefil
 1. To create the DappMesh resources:
 
 ```shell
-# creates the namespace and CRDs
-make k8s-base-create
+# creates the namespaces, CRDs, and infrastructure services
+make k8s-infra-create
 
 # creates the platform operators and services
 make k8s-platform-create
@@ -157,8 +157,8 @@ make k8s-app-delete
 # delete the platform operators and services
 make k8s-platform-delete
 
-# deletes the namespace and CRDs
-make k8s-base-delete 
+# deletes the namespace, CRDs, and infrastructure services
+make k8s-infra-delete 
 ```
 
 ## Contributing
