@@ -49,7 +49,7 @@ spec:
         app: dapp-mesh-operator
     spec:
       containers:
-        - image: docker-registry.registry.svc.cluster.local:5000/dapp-mesh-operator:latest-dev
+        - image: ghcr.io/dappmesh/dapp-mesh-operator:latest-dev
           imagePullPolicy: "Always"
           name: dapp-mesh-operator
           ports:

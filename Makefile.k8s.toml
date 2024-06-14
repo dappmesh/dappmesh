@@ -9,8 +9,6 @@ cm_run_task k8s-infra-cert-manager-create
 cm_run_task k8s-infra-trust-manager-create
 cm_run_task k8s-infra-trust-manager-wait
 cm_run_task k8s-infra-certificates-create
-cm_run_task k8s-infra-traefik-create
-cm_run_task k8s-infra-docker-registry-create
 cm_run_task k8s-infra-platform-create
 '''
 
@@ -52,33 +50,12 @@ for crd in ${crds}
 end
 '''
 
-[tasks.k8s-infra-docker-registry-create]
-category = "LOCAL USAGE"
-script_runner = "@duckscript"
-script = '''
-exec kubectl apply -f ./manifests/infra/registry/resources/certificate.yaml
-values = set "./manifests/infra/registry/helm/values.yaml"
-exec helm repo add twuni https://helm.twun.io
-exec helm install -f ${values} docker-registry twuni/docker-registry --version 2.2.3 -n registry
-exec kubectl apply -f ./manifests/infra/registry/resources/transport.yaml
-exec kubectl apply -f ./manifests/infra/registry/resources/ingress.yaml
-'''
-
-[tasks.k8s-infra-docker-registry-htpasswd]
-category = "LOCAL USAGE"
-script_runner = "@duckscript"
-script = '''
-exec htpasswd -Bbn dappmesh dappmesh
-'''
-
 [tasks.k8s-infra-namespaces-create]
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
 exec kubectl create namespace cert-manager
 exec kubectl create namespace dappmesh
-exec kubectl create namespace registry
-exec kubectl create namespace traefik
 '''
 
 [tasks.k8s-infra-platform-create]
@@ -86,17 +63,6 @@ category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
 exec kubectl apply -f ./manifests/platform/crd
-exec kubectl apply -f ./manifests/platform/secret
-'''
-
-[tasks.k8s-infra-traefik-create]
-category = "LOCAL USAGE"
-script_runner = "@duckscript"
-script = '''
-values = set "./manifests/infra/traefik/helm/values.yaml"
-exec helm repo add traefik https://traefik.github.io/charts
-exec helm install -f ${values} traefik traefik/traefik --version 28.1.0 -n traefik
-exec kubectl apply -f ./manifests/infra/traefik/resources/
 '''
 
 [tasks.k8s-infra-trust-manager-create]
@@ -140,23 +106,11 @@ while less_than ${now} ${end_time}
 end
 '''
 
-[tasks.k8s-infra-cert-export]
-category = "LOCAL USAGE"
-script_runner = "@duckscript"
-script = '''
-cert = exec kubectl get secret registry-tls -n registry -o jsonpath='{.data.ca\.crt}'
-cert_decoded = base64_decode ${cert}
-exec sudo mkdir -p /etc/docker/certs.d/registry.dappmesh.local:5000/
-exec sudo echo ${cert_decoded} > /etc/docker/certs.d/registry.dappmesh.local:5000/ca.crt
-'''
-
 [tasks.k8s-infra-delete]
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
 cm_run_task k8s-infra-platform-delete
-cm_run_task k8s-infra-docker-registry-delete
-cm_run_task k8s-infra-traefik-delete
 cm_run_task k8s-infra-trust-manager-delete
 cm_run_task k8s-infra-cert-manager-delete
 '''
@@ -171,52 +125,12 @@ exec kubectl delete -f https://github.com/cert-manager/cert-manager/releases/dow
 exec kubectl delete namespace cert-manager
 '''
 
-[tasks.k8s-infra-docker-registry-delete]
-category = "LOCAL USAGE"
-script_runner = "@duckscript"
-script = '''
-exec helm uninstall docker-registry -n registry
-exec helm repo remove twuni
-exec kubectl delete -f ./manifests/infra/registry/resources/
-exec kubectl delete namespace registry
-'''
-
 [tasks.k8s-infra-platform-delete]
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
 exec kubectl delete -f ./manifests/platform/crd
-exec kubectl delete -f ./manifests/platform/secret
 exec kubectl delete namespace dappmesh
-'''
-
-[tasks.k8s-infra-traefik-delete]
-category = "LOCAL USAGE"
-script_runner = "@duckscript"
-script = '''
-exec kubectl delete -f ./manifests/infra/traefik/resources/
-exec helm uninstall traefik -n traefik
-exec helm repo remove traefik
-
-exec kubectl delete crds/accesscontrolpolicies.hub.traefik.io
-exec kubectl delete crds/apiaccesses.hub.traefik.io
-exec kubectl delete crds/apiportals.hub.traefik.io
-exec kubectl delete crds/apiratelimits.hub.traefik.io
-exec kubectl delete crds/apis.hub.traefik.io
-exec kubectl delete crds/apiversions.hub.traefik.io
-exec kubectl delete crds/edgeingresses.hub.traefik.io
-exec kubectl delete crds/ingressroutes.traefik.io
-exec kubectl delete crds/ingressroutetcps.traefik.io
-exec kubectl delete crds/ingressrouteudps.traefik.io
-exec kubectl delete crds/middlewares.traefik.io
-exec kubectl delete crds/middlewaretcps.traefik.io
-exec kubectl delete crds/serverstransports.traefik.io
-exec kubectl delete crds/serverstransporttcps.traefik.io
-exec kubectl delete crds/tlsoptions.traefik.io
-exec kubectl delete crds/tlsstores.traefik.io
-exec kubectl delete crds/traefikservices.traefik.io
-
-exec kubectl delete namespace traefik
 '''
 
 [tasks.k8s-infra-trust-manager-delete]

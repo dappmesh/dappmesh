@@ -70,7 +70,7 @@ for binary in ${binaries}
     docker_dir = set "./docker/local"
     build_arg = set "TARGET_BIN=${binary}"
     file = set "${docker_dir}/Dockerfile"
-    tag = set "registry.dappmesh.local:5000/${binary}:latest-dev"
+    tag = set "ghcr.io/dappmesh/${binary}:latest-dev"
     exec docker buildx build --platform linux/amd64 --target dev-local --build-arg ${build_arg} --file ${file} --tag ${tag} ${docker_dir}
 end
 '''
@@ -82,7 +82,7 @@ script = '''
 binaries = array "dapp-domain-operator" "dapp-mesh-operator" "dapp-product-operator"
 
 for binary in ${binaries}
-    tag = set "registry.dappmesh.local:5000/${binary}:latest-dev"
+    tag = set "ghcr.io/dappmesh/${binary}:latest-dev"
     exec docker push ${tag}
 end
 '''

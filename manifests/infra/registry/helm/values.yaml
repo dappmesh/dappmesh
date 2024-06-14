@@ -1,9 +1,0 @@
-persistence:
-  accessMode: 'ReadWriteOnce'
-  enabled: true
-  size: 5Gi
-
-secrets:
-  htpasswd: "dappmesh:$2y$05$9jYe8K0JMJGzHb/7/KwJBOJqB.bdBhaPB1aAOh2DlWN79e8eM1JJm"
-
-tlsSecretName: registry-tls
