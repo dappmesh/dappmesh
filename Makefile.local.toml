@@ -42,63 +42,6 @@ category = "LOCAL USAGE"
 command = "cargo"
 args = ["build", "${@}"]
 
-# Docker
-[tasks.docker-resources]
-category = "LOCAL USAGE"
-script_runner = "@duckscript"
-script = '''
-TARGET_DIR = set "./target/debug"
-DOCKER_RESOURCES_DIR = set "./docker/local/bin"
-
-binaries = array "dapp-domain-operator" "dapp-mesh-operator" "dapp-product-operator"
-
-mkdir ${DOCKER_RESOURCES_DIR}
-for binary in ${binaries}
-    source = set ${TARGET_DIR}/${binary}
-    target = set ${DOCKER_RESOURCES_DIR}/${binary}
-    cp ${source} ${target}
-end
-'''
-
-[tasks.docker-build]
-category = "LOCAL USAGE"
-script_runner = "@duckscript"
-script = '''
-binaries = array "dapp-domain-operator" "dapp-mesh-operator" "dapp-product-operator"
-
-for binary in ${binaries}
-    docker_dir = set "./docker/local"
-    build_arg = set "TARGET_BIN=${binary}"
-    file = set "${docker_dir}/Dockerfile"
-    tag = set "ghcr.io/dappmesh/${binary}:latest-dev"
-    exec docker buildx build --platform linux/amd64 --target dev-local --build-arg ${build_arg} --file ${file} --tag ${tag} ${docker_dir}
-end
-'''
-
-[tasks.docker-push]
-category = "LOCAL USAGE"
-script_runner = "@duckscript"
-script = '''
-binaries = array "dapp-domain-operator" "dapp-mesh-operator" "dapp-product-operator"
-
-for binary in ${binaries}
-    tag = set "ghcr.io/dappmesh/${binary}:latest-dev"
-    exec docker push ${tag}
-end
-'''
-
-[tasks.docker-clean]
-category = "LOCAL USAGE"
-script_runner = "@duckscript"
-script = '''
-DOCKER_RESOURCES_DIR = set "./docker/local/bin"
-rm -r ${DOCKER_RESOURCES_DIR}
-'''
-
-[tasks.docker]
-category = "LOCAL USAGE"
-dependencies = ["docker-resources", "docker-build", "docker-push", "docker-clean"]
-
 # Build
 [tasks.build]
 category = "LOCAL USAGE"
@@ -111,6 +54,31 @@ args = ["build", "--release", "${@}"]
 category = "LOCAL USAGE"
 clear = true
 dependencies = ["check", "test", "quick"]
+
+# Docker
+[tasks.docker-build]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+tag = set "slim-bookworm"
+docker_dir = set "./docker/local"
+build_arg = set "TAG=${tag}"
+file = set "${docker_dir}/Dockerfile"
+tag = set "ghcr.io/dappmesh/devspace-container:${tag}"
+exec docker buildx build --platform linux/amd64 --build-arg ${build_arg} --file ${file} --tag ${tag} ${docker_dir}
+'''
+
+[tasks.docker-push]
+category = "LOCAL USAGE"
+script_runner = "@duckscript"
+script = '''
+tag = set "ghcr.io/dappmesh/devspace-container:slim-bookworm"
+exec docker push ${tag}
+'''
+
+[tasks.docker]
+category = "LOCAL USAGE"
+dependencies = ["docker-build", "docker-push"]
 
 # Unit Test
 [tasks.test]

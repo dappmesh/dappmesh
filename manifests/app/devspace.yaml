@@ -1,0 +1,28 @@
+version: v2beta1
+name: dappmesh-app
+
+dependencies:
+  domain-operator:
+    path: ../platform/operator/domain
+    pipeline: dev
+  mesh-operator:
+    path: ../platform/operator/mesh
+    pipeline: dev
+  product-operator:
+    path: ../platform/operator/product
+    pipeline: dev
+
+pipelines:
+  dev:
+    run: |-
+      run_dependency_pipelines --all
+      create_deployments data-product
+
+deployments:
+  data-product:
+    namespace: dappmesh
+    kubectl:
+      manifests:
+        - ./domain/**
+        - ./mesh/**
+        - ./product/**

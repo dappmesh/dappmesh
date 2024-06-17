@@ -1,7 +1,6 @@
 extend = [
 	{ path = "Makefile.local.toml" },
-	{ path = "Makefile.ci.toml" },
-	{ path = "Makefile.k8s.toml" }
+	{ path = "Makefile.ci.toml" }
 ]
 
 [env]

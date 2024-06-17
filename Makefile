@@ -39,32 +39,6 @@ build: check-deps
 docker: quick
 	cargo make docker
 
-# Kubernetes create
-.PHONY: k8s-infra-create
-k8s-infra-create: quick
-	cargo make k8s-infra-create
-
-.PHONY: k8s-platform-create
-k8s-platform-create: quick
-	cargo make k8s-platform-create
-
-.PHONY: k8s-app-create
-k8s-app-create: quick
-	cargo make k8s-app-create
-
-# Kubernetes delete
-.PHONY: k8s-app-delete
-k8s-app-delete:
-	cargo make k8s-app-delete
-
-.PHONY: k8s-platform-delete
-k8s-platform-delete:
-	cargo make k8s-platform-delete
-
-.PHONY: k8s-infra-delete
-k8s-infra-delete:
-	cargo make k8s-infra-delete
-
 # Tests
 .PHONY: test
 test: quick

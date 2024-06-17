@@ -1,12 +1,7 @@
-FROM cgr.dev/chainguard/glibc-dynamic:latest-dev as dev-local
+ARG  TAG
 
-ARG TARGET_BIN
-ENV OPERATOR_BIN $TARGET_BIN
+FROM rust:${TAG}
 
-USER root
+RUN apt-get update && apt-get -y install libssl-dev build-essential musl-dev libc6
 
-COPY bin/${TARGET_BIN} /${TARGET_BIN}
-
-RUN chmod +x /${TARGET_BIN}
-
-ENTRYPOINT /$OPERATOR_BIN
+WORKDIR /app

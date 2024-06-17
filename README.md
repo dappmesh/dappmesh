@@ -41,7 +41,7 @@ NOTE: You might want to check some concepts discussed in this AWS article about 
 - [Mesh Operator](docs/project/mesh-operator.md)
 - [Domain Operator](docs/project/domain-operator.md)
 - [Product Operator](docs/project/product-operator.md)
-- [Platform](docs/project/platform.md)
+- [DappMesh Platform](docs/project/platform.md)
 
 ## Using DappMesh
 
@@ -52,6 +52,7 @@ NOTE: You might want to check some concepts discussed in this AWS article about 
 - **Docker Plugins:** [buildx plugin](https://github.com/docker/buildx).
 - **Kubernetes distribution:** [kind](https://kind.sigs.k8s.io/), [minikube](https://minikube.sigs.k8s.io/docs/), [k3d](https://k3d.io/), [k3s](https://k3s.io/), [microk8s](https://microk8s.io/), etc.
 - **Kubernetes client:** [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+- **DevSpace:** [devspace](https://www.devspace.sh/docs/getting-started/installation)
 
 ### OS Specific Setup
 
@@ -137,28 +138,24 @@ For more commands, read the [Makefile](./Makefile) and [Makefile.toml](./Makefil
 
 1. To create the DappMesh resources:
 
+:warning: **Warning:** The development container uses a rust debian image which can take a long time to load on the first try. Run ```devspace``` again in case of timeout.
+
 ```shell
-# creates the namespaces, CRDs, and infrastructure services
-make k8s-infra-create
+# quick build 
+make quick
 
-# creates the platform operators and services
-make k8s-platform-create
-
-# creates the sample application
-make k8s-app-create 
+# creates CRDs, infrastructure, platform operators and data product application
+devspace dev
 ```
 
 2. To delete the DappMesh resources: 
 
 ```shell
-# deletes the sample application
-make k8s-app-delete
+# deletes the deployed kubernetes resources
+devspace purge
 
-# delete the platform operators and services
-make k8s-platform-delete
-
-# deletes the namespace, CRDs, and infrastructure services
-make k8s-infra-delete 
+# forces to purge even though it might be in use by another DevSpace project
+devspace purge --force-purge
 ```
 
 ## Contributing
