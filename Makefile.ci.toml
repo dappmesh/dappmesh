@@ -18,8 +18,8 @@ args = ["clippy", "--all-targets", "--tests", "--benches", "--examples", "--bins
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-TARGET_DIR = set "./target/debug"
-DOCKER_RESOURCES_DIR = set "./docker/local/bin"
+TARGET_DIR = set "./target/release"
+DOCKER_RESOURCES_DIR = set "./docker/ci/bin"
 
 binaries = array "dapp-domain-operator" "dapp-mesh-operator" "dapp-product-operator"
 
@@ -38,7 +38,7 @@ script = '''
 binaries = array "dapp-domain-operator" "dapp-mesh-operator" "dapp-product-operator"
 
 for binary in ${binaries}
-    docker_dir = set "./docker/local"
+    docker_dir = set "./docker/ci"
     build_arg = set "TARGET_BIN=${binary}"
     file = set "${docker_dir}/Dockerfile"
     tag = set "ghcr.io/dappmesh/${binary}:latest-dev"
@@ -62,7 +62,7 @@ end
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-DOCKER_RESOURCES_DIR = set "./docker/local/bin"
+DOCKER_RESOURCES_DIR = set "./docker/ci/bin"
 rm -r ${DOCKER_RESOURCES_DIR}
 '''
 

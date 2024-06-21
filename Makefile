@@ -39,6 +39,10 @@ build: check-deps
 docker: quick
 	cargo make docker
 
+.PHONY: ci-docker
+ci-docker: build
+	cargo make ci-docker
+
 # Tests
 .PHONY: test
 test: quick
