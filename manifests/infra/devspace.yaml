@@ -1,0 +1,84 @@
+version: v2beta1
+name: dappmesh-infra
+
+vars:
+  CERT_MANAGER_VERSION:
+    source: env
+  TRUST_MANAGER_VERSION:
+    source: env
+
+pipelines:
+  dev:
+    run: |-
+      create_deployments cert-manager-crds
+      create_deployments cert-manager
+      create_deployments trust-manager
+      wait-trust-manager-endpoint
+      create_deployments cert-manager-issuer
+
+deployments:
+  cert-manager:
+    namespace: cert-manager
+    helm:
+      releaseName: cert-manager
+      chart:
+        name: cert-manager
+        repo: https://charts.jetstack.io
+        version: ${CERT_MANAGER_VERSION}
+      values:
+        prometheus:
+          enabled: false
+        webhook:
+          timeoutSeconds: 5
+
+  cert-manager-crds:
+    namespace: cert-manager
+    kubectl:
+      manifests:
+        - https://github.com/cert-manager/cert-manager/releases/download/v${CERT_MANAGER_VERSION}/cert-manager.crds.yaml
+
+  cert-manager-issuer:
+    namespace: cert-manager
+    kubectl:
+      manifests:
+        - ./certificate/**
+
+  trust-manager:
+    namespace: cert-manager
+    helm:
+      releaseName: trust-manager
+      chart:
+        name: trust-manager
+        repo: https://charts.jetstack.io
+        version: ${TRUST_MANAGER_VERSION}
+      values:
+        crds:
+          keep: false
+        secretTargets:
+          enabled: true
+          authorizedSecretsAll: true
+
+hooks:
+  - wait:
+      running: true
+      terminatedWithCode: 0
+    container:
+      namespace: cert-manager
+      labelSelector:
+        app.kubernetes.io/component: webhook
+    events: ["after:deploy:cert-manager"]
+    name: "wait-cert-manager-webhook"
+
+  - wait:
+      running: true
+      terminatedWithCode: 0
+    container:
+      namespace: cert-manager
+      labelSelector:
+        app.kubernetes.io/component: trust-manager
+    events: [ "after:deploy:trust-manager" ]
+    name: "wait-trust-manager"
+
+functions:
+  wait-trust-manager-endpoint: |-
+    /bin/bash ./scripts/wait-trust-manager-endpoint.sh

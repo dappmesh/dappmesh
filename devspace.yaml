@@ -1,0 +1,14 @@
+version: v2beta1
+name: dappmesh
+
+vars:
+  DEVSPACE_ENV_FILE: ".env"
+
+dependencies:
+  data-product:
+    path: manifests/app
+    pipeline: dev
+
+pipelines:
+  dev: |-
+    run_dependency_pipelines --all

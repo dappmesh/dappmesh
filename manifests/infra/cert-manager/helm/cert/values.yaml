@@ -1,5 +1,0 @@
-prometheus:
-  enabled: false
-
-webhook:
-  timeoutSeconds: 10

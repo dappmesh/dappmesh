@@ -10,7 +10,7 @@ members = [
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.77"
+rust-version = "1.79"
 authors = ["DappMesh Developers <developers@dappmesh.io>"]
 readme = "./README.md"
 homepage = "https://dappmesh.io/"
@@ -24,11 +24,11 @@ assert-json-diff = "2.0.2"
 chrono = "0.4.34"
 futures = "0.3.30"
 hyper = "1.2.0"
-k8s-openapi = { version = "0.21", default-features = false, features = ["v1_24"]}
-kube = {version = "0.90.0", features = ["derive", "runtime"]}
-kube-client = "0.90.0"
-kube-core = "0.90.0"
-kube-derive = "0.90.0"
+k8s-openapi = { version = "0.22.0", default-features = false, features = ["v1_24"]}
+kube = {version = "0.92.1", features = ["derive", "runtime"]}
+kube-client = "0.92.1"
+kube-core = "0.92.1"
+kube-derive = "0.92.1"
 schemars = "0.8.16"
 semver = "1.0.21"
 serde = "1.0.196"
