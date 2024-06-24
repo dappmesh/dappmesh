@@ -6,6 +6,7 @@
 | - | - |
 | [Rust for Rustaceans](https://nostarch.com/rust-rustaceans) | Rust |
 | [Programmin Rust](https://learning.oreilly.com/library/view/programming-rust-2nd/9781492052586/) | Rust |
+| [The Kubernetes Operator Framework Book](https://www.amazon.com/Kubernetes-Operator-Framework-Book-management-ebook/dp/B0B21NBLT1) | Kubernetes |
 | [Data Mesh](https://learning.oreilly.com/library/view/data-mesh/9781492092384/) | Architecture |
 | [Event Driven Data Mesh](https://learning.oreilly.com/library/view/building-an-event-driven/9781098127596/) | Architecture |
 | [Driving Data Quality with Data Contracts](https://learning.oreilly.com/library/view/driving-data-quality/9781837635009/) | Governance |
