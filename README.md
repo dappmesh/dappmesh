@@ -1,6 +1,6 @@
-# Energy Efficient Data Mesh Platform
+# Energy Efficient Data Platform
 
-**DappMesh** is a framework for creating cloud-native data mesh distributed applications declaratively.
+**DappMesh** is a framework for creating cloud-native data applications declaratively.
 
 At its core, DappMesh embraces the principles of Data Mesh by **decentralizing data ownership** and management across **domain-oriented data product** applications.
 This is achieved through a distributed architecture that implements Kubernetes Operator Framework to manage a specific Data Mesh component as a custom resource.
@@ -35,13 +35,6 @@ NOTE: You might want to check some concepts discussed in this AWS article about 
 - [Composite Operator Mesh](docs/architecture/operator-mesh.md)
 - [Data Product](docs/architecture/data-product.md)
 - [Data Application Model](docs/architecture/application-model.md)
-
-## Components
-
-- [Mesh Operator](docs/project/mesh-operator.md)
-- [Domain Operator](docs/project/domain-operator.md)
-- [Product Operator](docs/project/product-operator.md)
-- [DappMesh Platform](docs/project/platform.md)
 
 ## Using DappMesh
 
