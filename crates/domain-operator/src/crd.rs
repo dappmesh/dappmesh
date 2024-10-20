@@ -2,7 +2,7 @@ use kube::CustomResource;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use dapp_platform::core::operator::OperatorResource;
+use dapp_platform::k8s::core::operator::OperatorResource;
 
 #[derive(
 	CustomResource, Serialize, Deserialize, Default, Debug, PartialEq, Eq, Clone, JsonSchema,

@@ -1,131 +1,62 @@
-use k8s_openapi::api::{
-	apps::v1::StatefulSet,
-	core::v1::{PersistentVolumeClaim, Service, ServiceAccount},
+use super::config::SurrealDBConfig;
+use crate::{
+	include_resource,
+	k8s::core::resource::{
+		DappPersistenceVolumeClaim, DappService, DappServiceAccount, DappStatefulSet,
+	},
 };
+use kube::{Client, Error};
+use std::sync::Arc;
 
-use kube::{
-	api::{DeleteParams, ListParams, PostParams},
-	Api, Client, Error, ResourceExt,
-};
+static SURREALDB_PVC_YAML: &str = include_resource!("storage/surrealdb/pvc.yaml");
+static SURREALDB_SERVICE_YAML: &str = include_resource!("storage/surrealdb/service.yaml");
+static SURREALDB_SERVICE_ACCOUNT_YAML: &str =
+	include_resource!("storage/surrealdb/service-account.yaml");
+static SURREALDB_STATEFULSET_YAML: &str = include_resource!("storage/surrealdb/statefulset.yaml");
 
-use super::{
-	config::SurrealDBConfig, service::SurrealDBService, service_account::SurrealDBServiceAccount,
-	statefulset::SurrealDBStatefulSet,
-};
-
-pub struct SurrealDBApp {
+pub struct DappSurrealDB {
 	client: Client,
-	pub service: SurrealDBService,
-	pub service_account: SurrealDBServiceAccount,
-	pub statefulset: SurrealDBStatefulSet,
+	config: Arc<SurrealDBConfig>,
+	pvc: DappPersistenceVolumeClaim,
+	service: DappService,
+	service_account: DappServiceAccount,
+	statefulset: DappStatefulSet,
 }
 
-impl SurrealDBApp {
+impl DappSurrealDB {
 	pub fn new(name: String, namespace: String, client: Client) -> Self {
-		let config = SurrealDBConfig::new(format!("{}-db", name), namespace);
+		let config = Arc::new(SurrealDBConfig::new(format!("{}-catalog", name), namespace));
+		let values = &config.clone().values;
 
 		Self {
 			client,
-			service: SurrealDBService::new(config.clone()),
-			service_account: SurrealDBServiceAccount::new(config.clone()),
-			statefulset: SurrealDBStatefulSet::new(config.clone()),
+			config,
+			pvc: DappPersistenceVolumeClaim::new(SURREALDB_PVC_YAML, values),
+			service: DappService::new(SURREALDB_SERVICE_YAML, values),
+			service_account: DappServiceAccount::new(SURREALDB_SERVICE_ACCOUNT_YAML, values),
+			statefulset: DappStatefulSet::new(SURREALDB_STATEFULSET_YAML, values),
 		}
 	}
 
 	pub async fn create(&self) -> Result<(), Error> {
-		self.create_service_account().await?;
-		self.create_statefulset().await?;
-		self.create_service().await?;
-		Ok(())
-	}
+		let name = &self.config.name;
+		let namespace = &self.config.namespace;
 
-	async fn create_service(&self) -> Result<(), Error> {
-		let api: Api<Service> = Api::namespaced(self.client.clone(), &self.service.namespace);
-		let params = ListParams::default().labels(&self.service.get_labels());
-
-		if api.list(&params).await?.items.is_empty() {
-			api.create(&PostParams::default(), &self.service.manifest()).await?;
-		}
-
-		Ok(())
-	}
-
-	async fn create_service_account(&self) -> Result<(), Error> {
-		let api: Api<ServiceAccount> =
-			Api::namespaced(self.client.clone(), &self.service_account.namespace);
-		let params = ListParams::default().labels(&self.service_account.get_labels());
-
-		if api.list(&params).await?.items.is_empty() {
-			api.create(&PostParams::default(), &self.service_account.manifest()).await?;
-		}
-
-		Ok(())
-	}
-
-	pub async fn create_statefulset(&self) -> Result<(), Error> {
-		let api: Api<StatefulSet> =
-			Api::namespaced(self.client.clone(), &self.statefulset.namespace);
-		let lp = ListParams::default().labels(&self.statefulset.get_labels());
-
-		if api.list(&lp).await?.items.is_empty() {
-			api.create(&PostParams::default(), &self.statefulset.manifest()).await?;
-		}
+		self.service_account.create(self.client.clone(), name, namespace).await?;
+		self.statefulset.create(self.client.clone(), name, namespace).await?;
+		self.service.create(self.client.clone(), name, namespace).await?;
 
 		Ok(())
 	}
 
 	pub async fn delete(&self) -> Result<(), Error> {
-		self.delete_service().await?;
-		self.delete_statefulset().await?;
-		self.delete_pvc().await?;
-		self.delete_service_account().await?;
-		Ok(())
-	}
+		let name = &self.config.name;
+		let namespace = &self.config.namespace;
 
-	pub async fn delete_pvc(&self) -> Result<(), Error> {
-		let api: Api<PersistentVolumeClaim> =
-			Api::namespaced(self.client.clone(), &self.statefulset.namespace);
-		let lp = ListParams::default().labels(&self.statefulset.get_labels());
-
-		for pvc in api.list(&lp).await? {
-			api.delete(&pvc.name_any(), &DeleteParams::default()).await?;
-		}
-
-		Ok(())
-	}
-
-	pub async fn delete_service(&self) -> Result<(), Error> {
-		let api: Api<Service> = Api::namespaced(self.client.clone(), &self.service.namespace);
-		let params = ListParams::default().labels(&self.service.get_labels());
-
-		for service in api.list(&params).await? {
-			api.delete(&service.name_any(), &DeleteParams::default()).await?;
-		}
-		Ok(())
-	}
-
-	pub async fn delete_service_account(&self) -> Result<(), Error> {
-		let api: Api<ServiceAccount> =
-			Api::namespaced(self.client.clone(), &self.service_account.namespace);
-
-		let params = ListParams::default().labels(&self.service_account.get_labels());
-
-		for sa in api.list(&params).await? {
-			api.delete(&sa.name_any(), &DeleteParams::default()).await?;
-		}
-
-		Ok(())
-	}
-
-	pub async fn delete_statefulset(&self) -> Result<(), Error> {
-		let api: Api<StatefulSet> =
-			Api::namespaced(self.client.clone(), &self.statefulset.namespace);
-
-		let lp = ListParams::default().labels(&self.statefulset.get_labels());
-
-		for ss in api.list(&lp).await? {
-			api.delete(&ss.name_any(), &DeleteParams::default()).await?;
-		}
+		self.service.delete(self.client.clone(), name, namespace).await?;
+		self.statefulset.delete(self.client.clone(), name, namespace).await?;
+		self.pvc.delete(self.client.clone(), name, namespace).await?;
+		self.service_account.delete(self.client.clone(), name, namespace).await?;
 
 		Ok(())
 	}
@@ -135,7 +66,14 @@ impl SurrealDBApp {
 mod tests {
 	use super::*;
 	use hyper::{Request, Response, StatusCode};
-	use k8s_openapi::apimachinery::pkg::apis::meta::v1::ObjectMeta;
+	use k8s_openapi::{
+		api::{
+			apps::v1::StatefulSet,
+			core::v1::PersistentVolumeClaim,
+			core::v1::{Service, ServiceAccount},
+		},
+		apimachinery::pkg::apis::meta::v1::ObjectMeta,
+	};
 	use kube::{
 		api::{ListMeta, ObjectList, TypeMeta},
 		client::Body,
@@ -145,7 +83,7 @@ mod tests {
 	use tokio::spawn;
 
 	const TEST_NAME: &str = "test-name";
-	const TEST_NAME_PREFIXED: &str = "test-name-db";
+	const TEST_NAME_PREFIXED: &str = "test-name-catalog";
 	const TEST_NAMESPACE: &str = "test-namespace";
 
 	type MockedKubeApiServerHandle = tower_test::mock::Handle<Request<Body>, Response<Body>>;
@@ -333,7 +271,7 @@ mod tests {
 			assert_eq!(
 				request.uri().to_string(),
 				format!(
-					"/api/v1/namespaces/{}/persistentvolumeclaims?&labelSelector=part-of%3D{}",
+					"/api/v1/namespaces/{}/persistentvolumeclaims?&labelSelector=app.kubernetes.io%2Fpart-of%3D{}",
 					TEST_NAMESPACE, TEST_NAME_PREFIXED
 				)
 			);
@@ -370,7 +308,7 @@ mod tests {
 			assert_eq!(
 				request.uri().to_string(),
 				format!(
-					"/api/v1/namespaces/{}/services?&labelSelector=part-of%3D{}",
+					"/api/v1/namespaces/{}/services?&labelSelector=app.kubernetes.io%2Fpart-of%3D{}",
 					TEST_NAMESPACE, TEST_NAME_PREFIXED
 				)
 			);
@@ -407,7 +345,7 @@ mod tests {
 			assert_eq!(
 				request.uri().to_string(),
 				format!(
-					"/api/v1/namespaces/{}/serviceaccounts?&labelSelector=part-of%3D{}",
+					"/api/v1/namespaces/{}/serviceaccounts?&labelSelector=app.kubernetes.io%2Fpart-of%3D{}",
 					TEST_NAMESPACE, TEST_NAME_PREFIXED
 				)
 			);
@@ -444,7 +382,7 @@ mod tests {
 			assert_eq!(
 				request.uri().to_string(),
 				format!(
-					"/apis/apps/v1/namespaces/{}/statefulsets?&labelSelector=part-of%3D{}",
+					"/apis/apps/v1/namespaces/{}/statefulsets?&labelSelector=app.kubernetes.io%2Fpart-of%3D{}",
 					TEST_NAMESPACE, TEST_NAME_PREFIXED
 				)
 			);
@@ -480,7 +418,7 @@ mod tests {
 	async fn surreal_db_create_resources() {
 		let (client, mock_api_server) = mock_client();
 		let surreal_db_app =
-			SurrealDBApp::new(TEST_NAME.to_string(), TEST_NAMESPACE.to_string(), client);
+			DappSurrealDB::new(TEST_NAME.to_string(), TEST_NAMESPACE.to_string(), client);
 
 		mock_api_server.handle_create();
 		let result = surreal_db_app.create().await;
@@ -492,7 +430,7 @@ mod tests {
 	async fn surreal_db_delete_resources() {
 		let (client, mock_kube_api) = mock_client();
 		let surreal_db_app =
-			SurrealDBApp::new(TEST_NAME.to_string(), TEST_NAMESPACE.to_string(), client);
+			DappSurrealDB::new(TEST_NAME.to_string(), TEST_NAMESPACE.to_string(), client);
 
 		mock_kube_api.handle_delete();
 		let result = surreal_db_app.delete().await;
