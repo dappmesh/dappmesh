@@ -84,7 +84,7 @@ dependencies = ["docker-build", "docker-push"]
 [tasks.test]
 category = "LOCAL USAGE"
 command = "cargo"
-args = ["test"]
+args = ["test", "--", "--nocapture"]
 
 # Integration Test
 [tasks.integration-test]

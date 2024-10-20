@@ -3,7 +3,7 @@ use k8s_openapi::{
 		apps::v1::{StatefulSet, StatefulSetSpec, StatefulSetStatus},
 		core::v1::{
 			Container, PersistentVolumeClaim, PersistentVolumeClaimSpec, PodSpec, PodTemplateSpec,
-			ResourceRequirements,
+			VolumeResourceRequirements,
 		},
 	},
 	apimachinery::pkg::{
@@ -12,9 +12,8 @@ use k8s_openapi::{
 	},
 };
 
-use std::collections::BTreeMap;
-
 use super::labels::Labels;
+use std::collections::BTreeMap;
 
 pub struct NoMetaData;
 
@@ -91,9 +90,9 @@ impl<Spec> StatefulSetBuilder<ObjectMeta, Spec> {
 				metadata: self.metadata.clone(),
 				spec: Some(PersistentVolumeClaimSpec {
 					access_modes: Some(access_modes),
-					resources: Some(ResourceRequirements {
+					resources: Some(VolumeResourceRequirements {
 						requests: Some(pvc_resources),
-						..ResourceRequirements::default()
+						..VolumeResourceRequirements::default()
 					}),
 					..PersistentVolumeClaimSpec::default()
 				}),
