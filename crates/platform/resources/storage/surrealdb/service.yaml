@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/name: {{ name }}
     app.kubernetes.io/component: database
     app.kubernetes.io/part-of: {{ part.of }}
-    app.kubernetes.io/version: 1.5.3
+    app.kubernetes.io/version: {{ version }}
 spec:
   type: ClusterIP
   ports:

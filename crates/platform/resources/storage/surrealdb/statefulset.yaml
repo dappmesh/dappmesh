@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/name: {{ name }}
     app.kubernetes.io/component: database
     app.kubernetes.io/part-of: {{ part.of }}
-    app.kubernetes.io/version: 1.5.3
+    app.kubernetes.io/version: {{ version }}
 spec:
   replicas: {{ replicas }}
   serviceName: {{ name }}
@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: {{ name }}
-          image: surrealdb/surrealdb:v1.5.3
+          image: {{ image }}
           imagePullPolicy: IfNotPresent
           args: [start]
           env:
@@ -61,7 +61,7 @@ spec:
           app.kubernetes.io/name: {{ name }}
           app.kubernetes.io/component: database
           app.kubernetes.io/part-of: {{ part.of }}
-          app.kubernetes.io/version: 1.5.3
+          app.kubernetes.io/version: {{ version }}
       spec:
         accessModes: [ "ReadWriteOnce" ]
         resources:
