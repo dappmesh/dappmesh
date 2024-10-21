@@ -10,7 +10,6 @@ args = ["check", "--locked", "--workspace"]
 [tasks.ci-clippy]
 category = "CI - CHECK"
 command = "cargo"
-env = { RUSTFLAGS = "--cfg dappmesh_unstable" }
 args = ["clippy", "--all-targets", "--tests", "--benches", "--examples", "--bins", "--", "-D", "warnings"]
 
 # Docker
@@ -18,7 +17,7 @@ args = ["clippy", "--all-targets", "--tests", "--benches", "--examples", "--bins
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-TARGET_DIR = set "./target/release"
+TARGET_DIR = set "./target/x86_64-unknown-linux-musl/release"
 DOCKER_RESOURCES_DIR = set "./docker/ci/bin"
 
 binaries = array "dapp-domain-operator" "dapp-mesh-operator" "dapp-product-operator"
@@ -41,8 +40,8 @@ for binary in ${binaries}
     docker_dir = set "./docker/ci"
     build_arg = set "TARGET_BIN=${binary}"
     file = set "${docker_dir}/Dockerfile"
-    tag = set "ghcr.io/dappmesh/${binary}:latest-dev"
-    exec docker buildx build --platform linux/amd64 --target dev-local --build-arg ${build_arg} --file ${file} --tag ${tag} ${docker_dir}
+    tag = set "ghcr.io/dappmesh/${binary}:latest"
+    exec docker buildx build --platform linux/amd64 --target release --build-arg ${build_arg} --file ${file} --tag ${tag} ${docker_dir}
 end
 '''
 
@@ -53,7 +52,7 @@ script = '''
 binaries = array "dapp-domain-operator" "dapp-mesh-operator" "dapp-product-operator"
 
 for binary in ${binaries}
-    tag = set "ghcr.io/dappmesh/${binary}:latest-dev"
+    tag = set "ghcr.io/dappmesh/${binary}:latest"
     exec docker push ${tag}
 end
 '''

@@ -22,7 +22,7 @@ dev:
       app: dapp-mesh-operator
     devImage: ghcr.io/dappmesh/devspace-container:${DEVSPACE_CONTAINER_TAG}
     sync:
-      - path: ../../../../target/debug/dapp-mesh-operator:/app/dapp-mesh-operator
+      - path: ../../../../target/x86_64-unknown-linux-musl/debug/dapp-mesh-operator:/app/dapp-mesh-operator
         file: true
         startContainer: true
         onUpload:
