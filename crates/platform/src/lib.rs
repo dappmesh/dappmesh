@@ -1,2 +1,1 @@
-pub mod core;
-pub mod surrealdb;
+pub mod k8s;

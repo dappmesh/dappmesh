@@ -24,7 +24,7 @@ jobs:
       - name: Install stable toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: 1.79.0
+          toolchain: 1.82.0
 
       - name: Checkout sources
         uses: actions/checkout@v4
@@ -41,12 +41,9 @@ jobs:
       - name: Check Unit Tests
         run: cargo make test
 
-      - name: Setup K8s test cluster
-        uses: nolar/setup-k3d-k3s@v1
-        with:
-          version: v1.24
-          k3d-name: kube
-          k3d-args: "--no-lb --no-rollback --k3s-arg --disable=traefik,servicelb,metrics-server@server:*"
+      - name: start minikube
+        id: minikube
+        uses: medyagh/setup-minikube@latest
       
       - name: Install CRDs
         run: kubectl apply -f manifests/platform/crds/
@@ -62,7 +59,7 @@ jobs:
       - name: Install stable toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: 1.79.0
+          toolchain: 1.82.0
 
       - name: Checkout sources
         uses: actions/checkout@v4
@@ -88,7 +85,7 @@ jobs:
       - name: Install stable toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: 1.79.0
+          toolchain: 1.82.0
           components: rustfmt
 
       - name: Checkout sources
@@ -124,7 +121,7 @@ jobs:
       - name: Install stable toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: 1.79.0
+          toolchain: 1.82.0
           components: clippy, rustfmt
 
       - name: Checkout sources

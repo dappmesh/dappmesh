@@ -1,14 +1,11 @@
 use kube::Client;
 
-use dapp_platform::{
-	core::operator::{OperatorController, OperatorError},
-	surrealdb::app::SurrealDBApp,
-};
-
 use crate::crd::DappDomain;
+use dapp_platform::k8s::core::operator::{OperatorController, OperatorError};
+use dapp_platform::k8s::storage::surrealdb::app::DappSurrealDB;
 
 pub struct DomainOperatorController {
-	pub surrealdb_app: SurrealDBApp,
+	pub surrealdb: DappSurrealDB,
 }
 
 impl DomainOperatorController {
@@ -16,19 +13,19 @@ impl DomainOperatorController {
 
 	pub fn new(name: String, namespace: String, client: Client) -> Self {
 		Self {
-			surrealdb_app: SurrealDBApp::new(name, namespace, client),
+			surrealdb: DappSurrealDB::new(name, namespace, client),
 		}
 	}
 }
 
 impl OperatorController<DappDomain> for DomainOperatorController {
 	async fn create_resources(&self) -> Result<(), OperatorError> {
-		self.surrealdb_app.create().await?;
+		self.surrealdb.create().await?;
 		Ok(())
 	}
 
 	async fn delete_resources(&self) -> Result<(), OperatorError> {
-		self.surrealdb_app.delete().await?;
+		self.surrealdb.delete().await?;
 		Ok(())
 	}
 
@@ -40,7 +37,7 @@ impl OperatorController<DappDomain> for DomainOperatorController {
 #[cfg(test)]
 mod tests {
 	use super::*;
-	use dapp_platform::core::operator::OperatorAction;
+	use dapp_platform::k8s::core::operator::OperatorAction;
 	use std::sync::Arc;
 
 	#[tokio::test]

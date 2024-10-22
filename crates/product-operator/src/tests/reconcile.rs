@@ -13,7 +13,7 @@ mod tests {
 		crd::{DappProduct, DappProductSpec},
 		operator::ProductOperatorController,
 	};
-	use dapp_platform::core::operator::{OperatorContext, OperatorController};
+	use dapp_platform::k8s::core::operator::{OperatorContext, OperatorController};
 
 	const PRODUCT_NAMESPACE: &str = "default";
 	const PRODUCT_NAME: &str = "product-test";
@@ -21,7 +21,7 @@ mod tests {
 	#[tokio::test]
 	#[ignore = "Integration Test, uses real k8s context"]
 	async fn should_reconcile_resource_lifecycle() -> Result<(), Error> {
-		let client = Client::try_default().await.unwrap();
+		let client = Client::try_default().await?;
 		let product_api: Api<DappProduct> = Api::namespaced(client.clone(), PRODUCT_NAMESPACE);
 		let product_resource = DappProduct::new(PRODUCT_NAME, DappProductSpec::default());
 

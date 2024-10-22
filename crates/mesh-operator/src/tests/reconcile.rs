@@ -13,7 +13,7 @@ mod tests {
 		crd::{DappMesh, DappMeshSpec},
 		operator::MeshOperatorController,
 	};
-	use dapp_platform::core::operator::{OperatorContext, OperatorController};
+	use dapp_platform::k8s::core::operator::{OperatorContext, OperatorController};
 
 	const MESH_NAMESPACE: &str = "default";
 	const MESH_NAME: &str = "mesh-test";
@@ -21,7 +21,7 @@ mod tests {
 	#[tokio::test]
 	#[ignore = "Integration Test, uses real k8s context"]
 	async fn should_reconcile_resource_lifecycle() -> Result<(), Error> {
-		let client = Client::try_default().await.unwrap();
+		let client = Client::try_default().await?;
 		let mesh_api: Api<DappMesh> = Api::namespaced(client.clone(), MESH_NAMESPACE);
 		let mesh_resource = DappMesh::new(MESH_NAME, DappMeshSpec::default());
 

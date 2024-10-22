@@ -2,7 +2,9 @@ use kube::{runtime::controller::Action, ResourceExt};
 use std::sync::Arc;
 
 use dapp_mesh_operator::{crd::DappMesh, operator::MeshOperatorController};
-use dapp_platform::core::operator::{Operator, OperatorContext, OperatorController, OperatorError};
+use dapp_platform::k8s::core::operator::{
+	Operator, OperatorContext, OperatorController, OperatorError,
+};
 
 #[tokio::main]
 async fn main() {
