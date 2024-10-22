@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ name }}
+  namespace: {{ namespace }}
+  labels:
+    app.kubernetes.io/name: {{ name }}
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: {{ part.of }}
+    app.kubernetes.io/version: {{ version }}
+spec:
+  replicas: {{ replicas }}
+  serviceName: {{ name }}
+  selector:
+    matchLabels:
+        app: {{ name }}
+  template:
+    metadata:
+      labels:
+        app: {{ name }}
+    spec:
+      containers:
+        - name: {{ name }}
+          image: {{ image }}
+          imagePullPolicy: IfNotPresent
+          args: [start]
+          env:
+            - name: SURREAL_NO_BANNER
+              value: "true"
+            - name: SURREAL_PATH
+              value: file:/data/store
+            - name: SURREAL_LOG
+              value: info
+            - name: SURREAL_BIND
+              value: 0.0.0.0:{{ port }}
+            - name: SURREAL_USER
+              value: {{ user }}
+            - name: SURREAL_PASS
+              value: {{ password }}
+            - name: SURREAL_AUTH
+              value: "true"
+          ports:
+            - name: http
+              containerPort: {{ port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          volumeMounts:
+            - name: {{ name }}
+              mountPath: /data/store
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ name }}
+        labels:
+          app.kubernetes.io/name: {{ name }}
+          app.kubernetes.io/component: database
+          app.kubernetes.io/part-of: {{ part.of }}
+          app.kubernetes.io/version: {{ version }}
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ storage.quantity }}

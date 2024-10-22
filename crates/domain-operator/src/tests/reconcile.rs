@@ -13,7 +13,7 @@ mod tests {
 		crd::{DappDomain, DappDomainSpec},
 		operator::DomainOperatorController,
 	};
-	use dapp_platform::core::operator::{OperatorContext, OperatorController};
+	use dapp_platform::k8s::core::operator::{OperatorContext, OperatorController};
 
 	const DOMAIN_NAMESPACE: &str = "default";
 	const DOMAIN_NAME: &str = "domain-test";
@@ -21,7 +21,7 @@ mod tests {
 	#[tokio::test]
 	#[ignore = "Integration Test, uses real k8s context"]
 	async fn should_reconcile_resource_lifecycle() -> Result<(), Error> {
-		let client = Client::try_default().await.unwrap();
+		let client = Client::try_default().await?;
 		let domain_api: Api<DappDomain> = Api::namespaced(client.clone(), DOMAIN_NAMESPACE);
 		let domain_resource = DappDomain::new(DOMAIN_NAME, DappDomainSpec::default());
 

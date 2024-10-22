@@ -12,7 +12,6 @@ dependencies = ["cargo-update"]
 [tasks.cargo-check]
 category = "LOCAL USAGE"
 command = "cargo"
-env = { RUSTFLAGS = "--cfg dappmesh_unstable" }
 args = ["check", "--workspace"]
 
 [tasks.cargo-fmt]
@@ -23,7 +22,6 @@ args = ["fmt", "--all", "--check"]
 [tasks.cargo-clippy]
 category = "LOCAL USAGE"
 command = "cargo"
-env = { RUSTFLAGS = "--cfg dappmesh_unstable" }
 args = ["clippy", "--all-targets", "--all-features", "--", "-D", "warnings"]
 
 [tasks.check]
@@ -40,14 +38,13 @@ args = ["clean"]
 [tasks.quick]
 category = "LOCAL USAGE"
 command = "cargo"
-args = ["build", "${@}"]
+args = ["build", "--target", "x86_64-unknown-linux-musl", "${@}"]
 
 # Build
 [tasks.build]
 category = "LOCAL USAGE"
 command = "cargo"
-env = { RUSTFLAGS = "--cfg dappmesh_unstable" }
-args = ["build", "--release", "${@}"]
+args = ["build", "--release", "--target", "x86_64-unknown-linux-musl", "${@}"]
 
 # Default
 [tasks.default]
@@ -60,7 +57,7 @@ dependencies = ["check", "test", "quick"]
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-tag = set "slim-bookworm"
+tag = set "alpine"
 docker_dir = set "./docker/local"
 build_arg = set "TAG=${tag}"
 file = set "${docker_dir}/Dockerfile"
@@ -72,7 +69,8 @@ exec docker buildx build --platform linux/amd64 --build-arg ${build_arg} --file 
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-tag = set "ghcr.io/dappmesh/devspace-container:slim-bookworm"
+tag = set "alpine"
+tag = set "ghcr.io/dappmesh/devspace-container:${tag}"
 exec docker push ${tag}
 '''
 
@@ -84,7 +82,7 @@ dependencies = ["docker-build", "docker-push"]
 [tasks.test]
 category = "LOCAL USAGE"
 command = "cargo"
-args = ["test"]
+args = ["test", "--", "--nocapture"]
 
 # Integration Test
 [tasks.integration-test]
