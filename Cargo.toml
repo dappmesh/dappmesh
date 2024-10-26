@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+	"crates/cli",
 	"crates/domain-operator",
 	"crates/mesh-operator",
 	"crates/platform",
@@ -21,6 +22,7 @@ license = "BSL-1.0"
 dapp-platform = { path = "crates/platform", version = "0.1.0" }
 anyhow = "1.0.80"
 assert-json-diff = "2.0.2"
+clap = { version = "4.5.20", features = ["derive"] }
 chrono = "0.4.34"
 futures = "0.3.30"
 hyper = "1.2.0"

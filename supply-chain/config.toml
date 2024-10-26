@@ -32,6 +32,26 @@ criteria = "safe-to-deploy"
 version = "0.1.5"
 criteria = "safe-to-deploy"
 
+[[exemptions.anstream]]
+version = "0.6.15"
+criteria = "safe-to-deploy"
+
+[[exemptions.anstyle]]
+version = "1.0.8"
+criteria = "safe-to-deploy"
+
+[[exemptions.anstyle-parse]]
+version = "0.2.5"
+criteria = "safe-to-deploy"
+
+[[exemptions.anstyle-query]]
+version = "1.1.1"
+criteria = "safe-to-deploy"
+
+[[exemptions.anstyle-wincon]]
+version = "3.0.4"
+criteria = "safe-to-deploy"
+
 [[exemptions.anyhow]]
 version = "1.0.86"
 criteria = "safe-to-run"
@@ -106,6 +126,26 @@ criteria = "safe-to-deploy"
 
 [[exemptions.chrono]]
 version = "0.4.38"
+criteria = "safe-to-deploy"
+
+[[exemptions.clap]]
+version = "4.5.20"
+criteria = "safe-to-deploy"
+
+[[exemptions.clap_builder]]
+version = "4.5.20"
+criteria = "safe-to-deploy"
+
+[[exemptions.clap_derive]]
+version = "4.5.18"
+criteria = "safe-to-deploy"
+
+[[exemptions.clap_lex]]
+version = "0.7.2"
+criteria = "safe-to-deploy"
+
+[[exemptions.colorchoice]]
+version = "1.0.2"
 criteria = "safe-to-deploy"
 
 [[exemptions.concurrent-queue]]
@@ -252,6 +292,10 @@ criteria = "safe-to-deploy"
 version = "0.3.0"
 criteria = "safe-to-deploy"
 
+[[exemptions.heck]]
+version = "0.5.0"
+criteria = "safe-to-deploy"
+
 [[exemptions.hermit-abi]]
 version = "0.3.9"
 criteria = "safe-to-deploy"
@@ -320,6 +364,10 @@ criteria = "safe-to-deploy"
 version = "0.1.13"
 criteria = "safe-to-deploy"
 
+[[exemptions.is_terminal_polyfill]]
+version = "1.70.1"
+criteria = "safe-to-deploy"
+
 [[exemptions.itoa]]
 version = "1.0.11"
 criteria = "safe-to-deploy"
@@ -369,7 +417,7 @@ version = "1.4.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.libc]]
-version = "0.2.155"
+version = "0.2.161"
 criteria = "safe-to-deploy"
 
 [[exemptions.lock_api]]
@@ -774,6 +822,10 @@ criteria = "safe-to-deploy"
 
 [[exemptions.untrusted]]
 version = "0.9.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.utf8parse]]
+version = "0.2.2"
 criteria = "safe-to-deploy"
 
 [[exemptions.uuid]]
