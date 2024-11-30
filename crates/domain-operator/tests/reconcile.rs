@@ -25,7 +25,7 @@ mod tests {
 		let controller = DomainOperatorController::new(
 			DOMAIN_NAME.to_string(),
 			DOMAIN_NAMESPACE.to_string(),
-			client.clone(),
+			&client,
 		);
 
 		let context: Arc<OperatorContext> = Arc::new(OperatorContext::new(client.clone()));

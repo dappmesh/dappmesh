@@ -25,7 +25,7 @@ mod tests {
 		let controller = ProductOperatorController::new(
 			PRODUCT_NAME.to_string(),
 			PRODUCT_NAMESPACE.to_string(),
-			client.clone(),
+			&client,
 		);
 
 		let context: Arc<OperatorContext> = Arc::new(OperatorContext::new(client.clone()));

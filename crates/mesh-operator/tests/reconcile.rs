@@ -22,11 +22,8 @@ mod tests {
 		let mesh_api: Api<DappMesh> = Api::namespaced(client.clone(), MESH_NAMESPACE);
 		let mesh_resource = DappMesh::new(MESH_NAME, DappMeshSpec::default());
 
-		let controller = MeshOperatorController::new(
-			MESH_NAME.to_string(),
-			MESH_NAMESPACE.to_string(),
-			client.clone(),
-		);
+		let controller =
+			MeshOperatorController::new(MESH_NAME.to_string(), MESH_NAMESPACE.to_string(), &client);
 
 		let context: Arc<OperatorContext> = Arc::new(OperatorContext::new(client.clone()));
 		let mesh = mesh_api.create(&PostParams::default(), &mesh_resource).await?;
