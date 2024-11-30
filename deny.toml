@@ -63,11 +63,8 @@ allow = [
 	"OpenSSL",
 	"Unlicense",
 	"MPL-2.0",
-]
-
-# List of exception allowed licenses from https://spdx.org/licenses
-exceptions = [
-	{ allow = ["Unicode-DFS-2016"], name = "unicode-ident", version = "*" },
+	"CC0-1.0",
+	"Unicode-3.0",
 ]
 
 [[licenses.clarify]]
