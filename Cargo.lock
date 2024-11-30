@@ -611,6 +611,7 @@ dependencies = [
  "kube",
  "schemars",
  "serde",
+ "serde_json",
  "tokio",
 ]
 
@@ -625,6 +626,7 @@ dependencies = [
  "kube",
  "schemars",
  "serde",
+ "serde_json",
  "tokio",
 ]
 
@@ -659,6 +661,7 @@ dependencies = [
  "kube",
  "schemars",
  "serde",
+ "serde_json",
  "tokio",
 ]
 
