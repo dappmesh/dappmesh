@@ -1,30 +1,25 @@
-mod command;
+use clap::Parser;
+use cli::Cli;
+use color_eyre::Result;
 
-use crate::command::helm::{Helm, HelmCommands};
-use clap::{Parser, Subcommand};
+use crate::app::App;
 
-#[derive(Parser)]
-#[command(version, about, long_about = None)]
-struct Cli {
-	#[command(subcommand)]
-	command: Commands,
-}
+mod action;
+mod app;
+mod cli;
+mod components;
+mod config;
+mod errors;
+mod logging;
+mod tui;
 
-#[derive(Subcommand)]
-enum Commands {
-	#[command(subcommand)]
-	Helm(HelmCommands),
-}
+#[tokio::main]
+async fn main() -> Result<()> {
+	crate::errors::init()?;
+	crate::logging::init()?;
 
-fn main() {
-	let cli = Cli::parse();
-
-	match &cli.command {
-		Commands::Helm(helm_cmd) => match helm_cmd {
-			HelmCommands::Import(args) => {
-				let helm = Helm::new(&args.source, &args.destination);
-				helm.import();
-			}
-		},
-	}
+	let args = Cli::parse();
+	let mut app = App::new(args.tick_rate, args.frame_rate)?;
+	app.run().await?;
+	Ok(())
 }

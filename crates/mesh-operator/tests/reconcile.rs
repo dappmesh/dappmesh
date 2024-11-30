@@ -1,6 +1,9 @@
 #[cfg(test)]
 mod tests {
 	use anyhow::{ensure, Error};
+	use dapp_mesh_operator::crd::{DappMesh, DappMeshSpec};
+	use dapp_mesh_operator::operator::MeshOperatorController;
+	use dapp_platform::k8s::core::operator::{OperatorContext, OperatorController};
 	use kube::{
 		api::{DeleteParams, PostParams},
 		runtime::controller::Action,
@@ -8,12 +11,6 @@ mod tests {
 	};
 	use std::sync::Arc;
 	use tokio::time::Duration;
-
-	use crate::{
-		crd::{DappMesh, DappMeshSpec},
-		operator::MeshOperatorController,
-	};
-	use dapp_platform::k8s::core::operator::{OperatorContext, OperatorController};
 
 	const MESH_NAMESPACE: &str = "default";
 	const MESH_NAME: &str = "mesh-test";

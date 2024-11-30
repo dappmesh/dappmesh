@@ -82,10 +82,10 @@ dependencies = ["docker-build", "docker-push"]
 [tasks.test]
 category = "LOCAL USAGE"
 command = "cargo"
-args = ["test", "--", "--nocapture"]
+args = ["test", "--workspace", "--", "--nocapture"]
 
 # Integration Test
 [tasks.integration-test]
 category = "LOCAL USAGE"
 command = "cargo"
-args = ["test", "--", "--ignored"]
+args = ["test", "--workspace", "--", "--ignored"]

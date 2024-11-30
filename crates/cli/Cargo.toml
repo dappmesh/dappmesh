@@ -14,3 +14,25 @@ path = "src/main.rs"
 
 [dependencies]
 clap = { workspace = true }
+color-eyre = { workspace = true }
+config = { workspace = true }
+crossterm = { workspace = true }
+derive_deref = { workspace = true }
+directories = { workspace = true }
+futures = { workspace = true }
+json5 = { workspace = true }
+lazy_static = { workspace = true }
+pretty_assertions = { workspace = true }
+ratatui = { workspace = true }
+serde = { workspace = true }
+signal-hook = { workspace = true }
+strum = { workspace = true }
+tokio = { workspace = true }
+tokio-util = { workspace = true }
+tracing = { workspace = true }
+tracing-error = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+[build-dependencies]
+anyhow = "1.0.90"
+vergen-gix = { version = "1.0.2", features = ["build", "cargo"] }
