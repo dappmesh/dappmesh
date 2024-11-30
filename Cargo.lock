@@ -610,7 +610,6 @@ dependencies = [
  "k8s-openapi",
  "kube",
  "schemars",
- "semver",
  "serde",
  "tokio",
 ]
@@ -625,7 +624,6 @@ dependencies = [
  "k8s-openapi",
  "kube",
  "schemars",
- "semver",
  "serde",
  "tokio",
 ]
@@ -640,7 +638,6 @@ dependencies = [
  "kube",
  "kube-core",
  "regex",
- "semver",
  "serde",
  "serde_json",
  "serde_yaml",
@@ -661,7 +658,6 @@ dependencies = [
  "k8s-openapi",
  "kube",
  "schemars",
- "semver",
  "serde",
  "tokio",
 ]

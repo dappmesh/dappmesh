@@ -68,10 +68,6 @@ criteria = "safe-to-deploy"
 version = "0.5.1"
 criteria = "safe-to-deploy"
 
-[[exemptions.assert-json-diff]]
-version = "2.0.2"
-criteria = "safe-to-run"
-
 [[exemptions.async-broadcast]]
 version = "0.7.1"
 criteria = "safe-to-deploy"
@@ -1371,10 +1367,6 @@ criteria = "safe-to-deploy"
 [[exemptions.utf8parse]]
 version = "0.2.2"
 criteria = "safe-to-deploy"
-
-[[exemptions.uuid]]
-version = "1.8.0"
-criteria = "safe-to-run"
 
 [[exemptions.valuable]]
 version = "0.1.0"

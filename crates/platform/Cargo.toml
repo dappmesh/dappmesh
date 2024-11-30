@@ -25,6 +25,3 @@ tracing-subscriber = { workspace = true }
 [dev-dependencies]
 hyper = { workspace = true }
 tower-test = { workspace = true }
-
-[build-dependencies]
-semver = { workspace = true }

@@ -19,6 +19,3 @@ tokio = { workspace = true }
 [dev-dependencies]
 anyhow = { workspace = true }
 chrono = { workspace = true }
-
-[build-dependencies]
-semver = { workspace = true }
