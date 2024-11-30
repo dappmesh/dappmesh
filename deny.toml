@@ -62,6 +62,7 @@ allow = [
 	"BSD-3-Clause",
 	"OpenSSL",
 	"Unlicense",
+	"MPL-2.0",
 ]
 
 # List of exception allowed licenses from https://spdx.org/licenses
