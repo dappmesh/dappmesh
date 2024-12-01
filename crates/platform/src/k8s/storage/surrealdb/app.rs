@@ -41,9 +41,9 @@ impl<'a> DappSurrealDB<'a> {
 		let name = &self.config.name;
 		let namespace = &self.config.namespace;
 
-		self.service_account.create(&self.client, name, namespace).await?;
-		self.statefulset.create(&self.client, name, namespace).await?;
-		self.service.create(&self.client, name, namespace).await?;
+		self.service_account.create(self.client, name, namespace).await?;
+		self.statefulset.create(self.client, name, namespace).await?;
+		self.service.create(self.client, name, namespace).await?;
 
 		Ok(())
 	}
@@ -52,10 +52,10 @@ impl<'a> DappSurrealDB<'a> {
 		let name = &self.config.name;
 		let namespace = &self.config.namespace;
 
-		self.service.delete(&self.client, name, namespace).await?;
-		self.statefulset.delete(&self.client, name, namespace).await?;
-		self.pvc.delete(&self.client, name, namespace).await?;
-		self.service_account.delete(&self.client, name, namespace).await?;
+		self.service.delete(self.client, name, namespace).await?;
+		self.statefulset.delete(self.client, name, namespace).await?;
+		self.pvc.delete(self.client, name, namespace).await?;
+		self.service_account.delete(self.client, name, namespace).await?;
 
 		Ok(())
 	}

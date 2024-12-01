@@ -81,7 +81,7 @@ where
 	) -> impl Future<Output = Result<(), OperatorError>> + Send {
 		async move {
 			self.create_resources().await?;
-			self.create_finalizer(&client, resource).await?;
+			self.create_finalizer(client, resource).await?;
 			Ok(())
 		}
 	}
@@ -93,7 +93,7 @@ where
 	) -> impl Future<Output = Result<(), OperatorError>> + Send {
 		async move {
 			self.delete_resources().await?;
-			self.delete_finalizer(&client, resource).await?;
+			self.delete_finalizer(client, resource).await?;
 			Ok(())
 		}
 	}
@@ -109,7 +109,7 @@ where
 					"finalizers": [self.finalizer()]
 				}
 			});
-			self.patch(&client, resource, finalizer).await?;
+			self.patch(client, resource, finalizer).await?;
 			Ok(())
 		}
 	}
@@ -125,7 +125,7 @@ where
 					"finalizers": []
 				}
 			});
-			self.patch(&client, resource, finalizer).await?;
+			self.patch(client, resource, finalizer).await?;
 			Ok(())
 		}
 	}
