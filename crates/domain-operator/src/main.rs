@@ -17,8 +17,8 @@ async fn reconcile(
 ) -> Result<Action, OperatorError> {
 	if let Some(namespace) = resource.namespace() {
 		let controller =
-			DomainOperatorController::new(resource.name_any(), namespace, context.client.clone());
-		controller.reconcile(resource, context).await
+			DomainOperatorController::new(resource.name_any(), namespace, &context.client);
+		controller.reconcile(resource, Arc::clone(&context)).await
 	} else {
 		Err(OperatorError::UserInputError("Expected resource to be namespaced.".to_string()))
 	}

@@ -1,6 +1,9 @@
 #[cfg(test)]
 mod tests {
 	use anyhow::{ensure, Error};
+	use dapp_platform::k8s::core::operator::{OperatorContext, OperatorController};
+	use dapp_product_operator::crd::{DappProduct, DappProductSpec};
+	use dapp_product_operator::operator::ProductOperatorController;
 	use kube::{
 		api::{DeleteParams, PostParams},
 		runtime::controller::Action,
@@ -8,12 +11,6 @@ mod tests {
 	};
 	use std::sync::Arc;
 	use tokio::time::Duration;
-
-	use crate::{
-		crd::{DappProduct, DappProductSpec},
-		operator::ProductOperatorController,
-	};
-	use dapp_platform::k8s::core::operator::{OperatorContext, OperatorController};
 
 	const PRODUCT_NAMESPACE: &str = "default";
 	const PRODUCT_NAME: &str = "product-test";
@@ -28,7 +25,7 @@ mod tests {
 		let controller = ProductOperatorController::new(
 			PRODUCT_NAME.to_string(),
 			PRODUCT_NAMESPACE.to_string(),
-			client.clone(),
+			&client,
 		);
 
 		let context: Arc<OperatorContext> = Arc::new(OperatorContext::new(client.clone()));

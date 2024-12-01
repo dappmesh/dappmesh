@@ -4,21 +4,21 @@ use crate::crd::DappDomain;
 use dapp_platform::k8s::core::operator::{OperatorController, OperatorError};
 use dapp_platform::k8s::storage::surrealdb::app::DappSurrealDB;
 
-pub struct DomainOperatorController {
-	pub surrealdb: DappSurrealDB,
+pub struct DomainOperatorController<'a> {
+	pub surrealdb: DappSurrealDB<'a>,
 }
 
-impl DomainOperatorController {
+impl<'a> DomainOperatorController<'a> {
 	pub const FINALIZER: &'static str = "dappdomains.dappmesh.io/finalizer";
 
-	pub fn new(name: String, namespace: String, client: Client) -> Self {
+	pub fn new(name: String, namespace: String, client: &'a Client) -> Self {
 		Self {
 			surrealdb: DappSurrealDB::new(name, namespace, client),
 		}
 	}
 }
 
-impl OperatorController<DappDomain> for DomainOperatorController {
+impl<'a> OperatorController<DappDomain> for DomainOperatorController<'a> {
 	async fn create_resources(&self) -> Result<(), OperatorError> {
 		self.surrealdb.create().await?;
 		Ok(())

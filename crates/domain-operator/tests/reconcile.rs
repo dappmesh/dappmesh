@@ -1,6 +1,9 @@
 #[cfg(test)]
 mod tests {
 	use anyhow::{ensure, Error};
+	use dapp_domain_operator::crd::{DappDomain, DappDomainSpec};
+	use dapp_domain_operator::operator::DomainOperatorController;
+	use dapp_platform::k8s::core::operator::{OperatorContext, OperatorController};
 	use kube::{
 		api::{DeleteParams, PostParams},
 		runtime::controller::Action,
@@ -8,12 +11,6 @@ mod tests {
 	};
 	use std::sync::Arc;
 	use tokio::time::Duration;
-
-	use crate::{
-		crd::{DappDomain, DappDomainSpec},
-		operator::DomainOperatorController,
-	};
-	use dapp_platform::k8s::core::operator::{OperatorContext, OperatorController};
 
 	const DOMAIN_NAMESPACE: &str = "default";
 	const DOMAIN_NAME: &str = "domain-test";
@@ -28,7 +25,7 @@ mod tests {
 		let controller = DomainOperatorController::new(
 			DOMAIN_NAME.to_string(),
 			DOMAIN_NAMESPACE.to_string(),
-			client.clone(),
+			&client,
 		);
 
 		let context: Arc<OperatorContext> = Arc::new(OperatorContext::new(client.clone()));

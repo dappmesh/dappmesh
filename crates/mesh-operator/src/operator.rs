@@ -4,21 +4,21 @@ use crate::crd::DappMesh;
 use dapp_platform::k8s::core::operator::{OperatorController, OperatorError};
 use dapp_platform::k8s::storage::surrealdb::app::DappSurrealDB;
 
-pub struct MeshOperatorController {
-	pub surrealdb: DappSurrealDB,
+pub struct MeshOperatorController<'a> {
+	pub surrealdb: DappSurrealDB<'a>,
 }
 
-impl MeshOperatorController {
+impl<'a> MeshOperatorController<'a> {
 	pub const FINALIZER: &'static str = "dappmeshs.dappmesh.io/finalizer";
 
-	pub fn new(name: String, namespace: String, client: Client) -> Self {
+	pub fn new(name: String, namespace: String, client: &'a Client) -> Self {
 		Self {
 			surrealdb: DappSurrealDB::new(name, namespace, client),
 		}
 	}
 }
 
-impl OperatorController<DappMesh> for MeshOperatorController {
+impl<'a> OperatorController<DappMesh> for MeshOperatorController<'a> {
 	async fn create_resources(&self) -> Result<(), OperatorError> {
 		self.surrealdb.create().await?;
 		Ok(())
