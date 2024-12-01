@@ -49,11 +49,11 @@ where
 
 	pub async fn create(
 		&self,
-		client: Client,
+		client: &Client,
 		name: &str,
 		namespace: &str,
 	) -> Result<(), KubeError> {
-		let api: Api<T> = Api::namespaced(client, namespace);
+		let api: Api<T> = Api::namespaced(client.clone(), namespace);
 		let params = self.label_selector(name);
 		let resource: T = serde_yaml::from_str(&self.content).map_err(|e| {
 			let json_err = serde_json::Error::custom(e.to_string());
@@ -68,11 +68,11 @@ where
 
 	pub async fn delete(
 		&self,
-		client: Client,
+		client: &Client,
 		name: &str,
 		namespace: &str,
 	) -> Result<(), KubeError> {
-		let api: Api<T> = Api::namespaced(client, namespace);
+		let api: Api<T> = Api::namespaced(client.clone(), namespace);
 		let params = self.label_selector(name);
 
 		for resource in api.list(&params).await? {

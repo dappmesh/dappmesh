@@ -6,7 +6,6 @@ use crate::{
 	},
 };
 use kube::{Client, Error};
-use std::sync::Arc;
 
 static SURREALDB_PVC_YAML: &str = include_resource!("storage/surrealdb/pvc.yaml");
 static SURREALDB_SERVICE_YAML: &str = include_resource!("storage/surrealdb/service.yaml");
@@ -14,27 +13,27 @@ static SURREALDB_SERVICE_ACCOUNT_YAML: &str =
 	include_resource!("storage/surrealdb/service-account.yaml");
 static SURREALDB_STATEFULSET_YAML: &str = include_resource!("storage/surrealdb/statefulset.yaml");
 
-pub struct DappSurrealDB {
-	client: Client,
-	config: Arc<SurrealDBConfig>,
+pub struct DappSurrealDB<'a> {
+	client: &'a Client,
+	config: SurrealDBConfig,
 	pvc: DappPersistenceVolumeClaim,
 	service: DappService,
 	service_account: DappServiceAccount,
 	statefulset: DappStatefulSet,
 }
 
-impl DappSurrealDB {
-	pub fn new(name: String, namespace: String, client: Client) -> Self {
-		let config = Arc::new(SurrealDBConfig::new(format!("{}-catalog", name), namespace));
-		let values = &config.clone().values;
+impl<'a> DappSurrealDB<'a> {
+	pub fn new(name: String, namespace: String, client: &'a Client) -> Self {
+		let config = SurrealDBConfig::new(format!("{}-catalog", name), namespace);
+		let values = &config.values;
 
 		Self {
 			client,
-			config,
 			pvc: DappPersistenceVolumeClaim::new(SURREALDB_PVC_YAML, values),
 			service: DappService::new(SURREALDB_SERVICE_YAML, values),
 			service_account: DappServiceAccount::new(SURREALDB_SERVICE_ACCOUNT_YAML, values),
 			statefulset: DappStatefulSet::new(SURREALDB_STATEFULSET_YAML, values),
+			config,
 		}
 	}
 
@@ -42,9 +41,9 @@ impl DappSurrealDB {
 		let name = &self.config.name;
 		let namespace = &self.config.namespace;
 
-		self.service_account.create(self.client.clone(), name, namespace).await?;
-		self.statefulset.create(self.client.clone(), name, namespace).await?;
-		self.service.create(self.client.clone(), name, namespace).await?;
+		self.service_account.create(self.client, name, namespace).await?;
+		self.statefulset.create(self.client, name, namespace).await?;
+		self.service.create(self.client, name, namespace).await?;
 
 		Ok(())
 	}
@@ -53,10 +52,10 @@ impl DappSurrealDB {
 		let name = &self.config.name;
 		let namespace = &self.config.namespace;
 
-		self.service.delete(self.client.clone(), name, namespace).await?;
-		self.statefulset.delete(self.client.clone(), name, namespace).await?;
-		self.pvc.delete(self.client.clone(), name, namespace).await?;
-		self.service_account.delete(self.client.clone(), name, namespace).await?;
+		self.service.delete(self.client, name, namespace).await?;
+		self.statefulset.delete(self.client, name, namespace).await?;
+		self.pvc.delete(self.client, name, namespace).await?;
+		self.service_account.delete(self.client, name, namespace).await?;
 
 		Ok(())
 	}
@@ -418,7 +417,7 @@ mod tests {
 	async fn surreal_db_create_resources() {
 		let (client, mock_api_server) = mock_client();
 		let surreal_db_app =
-			DappSurrealDB::new(TEST_NAME.to_string(), TEST_NAMESPACE.to_string(), client);
+			DappSurrealDB::new(TEST_NAME.to_string(), TEST_NAMESPACE.to_string(), &client);
 
 		mock_api_server.handle_create();
 		let result = surreal_db_app.create().await;
@@ -430,7 +429,7 @@ mod tests {
 	async fn surreal_db_delete_resources() {
 		let (client, mock_kube_api) = mock_client();
 		let surreal_db_app =
-			DappSurrealDB::new(TEST_NAME.to_string(), TEST_NAMESPACE.to_string(), client);
+			DappSurrealDB::new(TEST_NAME.to_string(), TEST_NAMESPACE.to_string(), &client);
 
 		mock_kube_api.handle_delete();
 		let result = surreal_db_app.delete().await;

@@ -4,21 +4,21 @@ use crate::crd::DappProduct;
 use dapp_platform::k8s::core::operator::{OperatorController, OperatorError};
 use dapp_platform::k8s::storage::surrealdb::app::DappSurrealDB;
 
-pub struct ProductOperatorController {
-	pub surrealdb: DappSurrealDB,
+pub struct ProductOperatorController<'a> {
+	pub surrealdb: DappSurrealDB<'a>,
 }
 
-impl ProductOperatorController {
+impl<'a> ProductOperatorController<'a> {
 	pub const FINALIZER: &'static str = "dappproducts.dappmesh.io/finalizer";
 
-	pub fn new(name: String, namespace: String, client: Client) -> Self {
+	pub fn new(name: String, namespace: String, client: &'a Client) -> Self {
 		Self {
 			surrealdb: DappSurrealDB::new(name, namespace, client),
 		}
 	}
 }
 
-impl OperatorController<DappProduct> for ProductOperatorController {
+impl<'a> OperatorController<DappProduct> for ProductOperatorController<'a> {
 	async fn create_resources(&self) -> Result<(), OperatorError> {
 		self.surrealdb.create().await?;
 		Ok(())

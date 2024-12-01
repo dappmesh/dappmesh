@@ -12,11 +12,8 @@ license.workspace = true
 futures = { workspace = true }
 k8s-openapi = { workspace = true }
 kube = { workspace = true }
-kube-client = { workspace = true }
 kube-core = { workspace = true }
-kube-derive = { workspace = true }
 regex = { workspace = true }
-schemars = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 serde_yaml = { workspace = true }
@@ -24,16 +21,7 @@ thiserror = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
-walkdir = { workspace = true }
 
 [dev-dependencies]
-anyhow = { workspace = true }
-assert-json-diff = { workspace = true }
-chrono = { workspace = true }
 hyper = { workspace = true }
 tower-test = { workspace = true }
-uuid = { workspace = true }
-
-[build-dependencies]
-semver = { workspace = true }
-walkdir = { workspace = true }

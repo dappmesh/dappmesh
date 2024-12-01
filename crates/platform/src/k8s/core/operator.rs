@@ -40,17 +40,17 @@ where
 	where
 		Crd: OperatorResource,
 	{
-		async {
+		async move {
 			info!("Reconciling: {:?}", resource.name_any());
-			match Self::action(resource.clone()) {
+			match Self::action(Arc::clone(&resource)) {
 				OperatorAction::Create => {
 					info!("Creating resources for: {:?}", resource.name_any());
-					self.handle_creation(context.client.clone(), resource.clone()).await?;
+					self.handle_creation(&context.client, Arc::clone(&resource)).await?;
 					Ok(Action::requeue(Duration::from_secs(5)))
 				}
 				OperatorAction::Delete => {
 					info!("Deleting resources for: {:?}", resource.name_any());
-					self.handle_deletion(context.client.clone(), resource.clone()).await?;
+					self.handle_deletion(&context.client, Arc::clone(&resource)).await?;
 					Ok(Action::await_change())
 				}
 				OperatorAction::NoOp => {
@@ -76,10 +76,10 @@ where
 
 	fn handle_creation(
 		&self,
-		client: Client,
+		client: &Client,
 		resource: Arc<Crd>,
 	) -> impl Future<Output = Result<(), OperatorError>> + Send {
-		async {
+		async move {
 			self.create_resources().await?;
 			self.create_finalizer(client, resource).await?;
 			Ok(())
@@ -88,10 +88,10 @@ where
 
 	fn handle_deletion(
 		&self,
-		client: Client,
+		client: &Client,
 		resource: Arc<Crd>,
 	) -> impl Future<Output = Result<(), OperatorError>> + Send {
-		async {
+		async move {
 			self.delete_resources().await?;
 			self.delete_finalizer(client, resource).await?;
 			Ok(())
@@ -100,7 +100,7 @@ where
 
 	fn create_finalizer(
 		&self,
-		client: Client,
+		client: &Client,
 		resource: Arc<Crd>,
 	) -> impl Future<Output = Result<(), OperatorError>> + Send {
 		async move {
@@ -116,10 +116,10 @@ where
 
 	fn delete_finalizer(
 		&self,
-		client: Client,
+		client: &Client,
 		resource: Arc<Crd>,
 	) -> impl Future<Output = Result<(), OperatorError>> + Send {
-		async {
+		async move {
 			let finalizer: Value = json!({
 				"metadata": {
 					"finalizers": []
@@ -132,7 +132,7 @@ where
 
 	fn patch(
 		&self,
-		client: Client,
+		client: &Client,
 		resource: Arc<Crd>,
 		finalizer: Value,
 	) -> impl Future<Output = Result<(), OperatorError>> + Send {
