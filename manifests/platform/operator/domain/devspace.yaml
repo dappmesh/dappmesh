@@ -23,7 +23,7 @@ dev:
       app: dapp-domain-operator
     devImage: ghcr.io/dappmesh/devspace-container:${DEVSPACE_CONTAINER_TAG}
     sync:
-      - path: ../../../../target/x86_64-unknown-linux-musl/debug/dapp-domain-operator:/app/dapp-domain-operator
+      - path: ../../../../target/${DEVSPACE_TARGET_PLATFORM}/debug/dapp-domain-operator:/app/dapp-domain-operator
         file: true
         startContainer: true
         onUpload:
