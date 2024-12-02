@@ -21,7 +21,7 @@ license = "BSL-1.0"
 
 [workspace.dependencies]
 dapp-platform = { path = "crates/platform", version = "0.1.0" }
-anyhow = "1.0.80"
+anyhow = "1.0.93"
 clap = { version = "4.5.20", features = [
     "derive",
     "cargo",
@@ -59,6 +59,7 @@ tower-test = "0.4.0"
 tracing = "0.1.40"
 tracing-error = "0.2.0"
 tracing-subscriber = { version = "0.3.18", features = ["json", "env-filter"] }
+vergen-gix = { version = "1.0.2", features = ["build", "cargo"] }
 
 [profile.release]
 lto = true

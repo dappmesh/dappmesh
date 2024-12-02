@@ -22,13 +22,17 @@ mod tests {
 		let mesh_api: Api<DappMesh> = Api::namespaced(client.clone(), MESH_NAMESPACE);
 		let mesh_resource = DappMesh::new(MESH_NAME, DappMeshSpec::default());
 
-		let controller =
-			MeshOperatorController::new(MESH_NAME.to_string(), MESH_NAMESPACE.to_string(), &client);
+		let operator_client = client.clone();
+		let operator = MeshOperatorController::new(
+			MESH_NAME.to_string(),
+			MESH_NAMESPACE.to_string(),
+			&operator_client,
+		);
 
 		let context: Arc<OperatorContext> = Arc::new(OperatorContext::new(client.clone()));
 		let mesh = mesh_api.create(&PostParams::default(), &mesh_resource).await?;
 
-		let action = controller.reconcile(Arc::new(mesh), context.clone()).await?;
+		let action = operator.reconcile(Arc::new(mesh), context.clone()).await?;
 		ensure!(action == Action::requeue(Duration::from_secs(5)));
 
 		let finalizers = mesh_api.get(MESH_NAME).await?.metadata.finalizers;
@@ -36,7 +40,7 @@ mod tests {
 
 		let mesh = mesh_api.delete(MESH_NAME, &DeleteParams::default()).await?;
 
-		let action = controller.reconcile(Arc::new(mesh.left_or_default()), context).await?;
+		let action = operator.reconcile(Arc::new(mesh.left_or_default()), context).await?;
 		ensure!(action == Action::await_change());
 
 		Ok(())

@@ -38,30 +38,30 @@ args = ["clean"]
 [tasks.quick]
 category = "LOCAL USAGE"
 command = "cargo"
-args = ["build", "--target", "x86_64-unknown-linux-musl", "${@}"]
+args = ["build", "--workspace", "--target", "x86_64-unknown-linux-musl", "${@}"]
 
 # Build
 [tasks.build]
 category = "LOCAL USAGE"
 command = "cargo"
-args = ["build", "--release", "--target", "x86_64-unknown-linux-musl", "${@}"]
+args = ["build", "--workspace", "--release", "--target", "x86_64-unknown-linux-musl", "${@}"]
 
 # Default
 [tasks.default]
 category = "LOCAL USAGE"
 clear = true
-dependencies = ["check", "test", "quick"]
+dependencies = ["check", "quick", "test"]
 
 # Docker
 [tasks.docker-build]
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-tag = set "alpine"
+rust_version = set "1.83.0"
 docker_dir = set "./docker/local"
-build_arg = set "TAG=${tag}"
+build_arg = set "TAG_VERSION=${rust_version}"
 file = set "${docker_dir}/Dockerfile"
-tag = set "ghcr.io/dappmesh/devspace-container:${tag}"
+tag = set "ghcr.io/dappmesh/devspace-container:${rust_version}"
 exec docker buildx build --platform linux/amd64 --build-arg ${build_arg} --file ${file} --tag ${tag} ${docker_dir}
 '''
 
@@ -69,8 +69,8 @@ exec docker buildx build --platform linux/amd64 --build-arg ${build_arg} --file 
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-tag = set "alpine"
-tag = set "ghcr.io/dappmesh/devspace-container:${tag}"
+rust_version = set "1.83.0"
+tag = set "ghcr.io/dappmesh/devspace-container:${rust_version}"
 exec docker push ${tag}
 '''
 

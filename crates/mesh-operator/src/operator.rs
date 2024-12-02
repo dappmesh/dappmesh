@@ -9,7 +9,7 @@ pub struct MeshOperatorController<'a> {
 }
 
 impl<'a> MeshOperatorController<'a> {
-	pub const FINALIZER: &'static str = "dappmeshs.dappmesh.io/finalizer";
+	pub const FINALIZER: &'static str = "dappmeshes.dappmesh.io/finalizer";
 
 	pub fn new(name: String, namespace: String, client: &'a Client) -> Self {
 		Self {
