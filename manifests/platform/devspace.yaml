@@ -1,6 +1,16 @@
 version: v2beta1
 name: dappmesh-platform
 
+pullSecrets:
+  ghcr-dappmesh:
+    registry: ghcr.io
+    username: ${GHCR_DAPPMESH_USER}
+    password: ${GHCR_DAPPMESH_TOKEN}
+    serviceAccounts:
+      - dapp-domain-operator
+      - dapp-mesh-operator
+      - dapp-product-operator
+
 dependencies:
   infra:
     path: ../infra
