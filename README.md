@@ -89,13 +89,14 @@ https://github.com/settings/tokens/new?scopes=write:packages
 2. Save and export your personal access token (classic)
 
 ```shell
-export GHRC_TOKEN=YOUR_TOKEN
+export GHCR_DAPPMESH_USER=YOUR_GITHUB_USER
+export GHCR_DAPPMESH_TOKEN=YOUR_TOKEN
 ```
 
 3. Using the CLI for your container type, sign in to the Container registry service:
 
 ```shell
-$ echo $GHRC_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
+$ echo $GHCR_DAPPMESH_TOKEN | docker login ghcr.io -u GHCR_DAPPMESH_USER --password-stdin
 > Login Succeeded
 ```
 
