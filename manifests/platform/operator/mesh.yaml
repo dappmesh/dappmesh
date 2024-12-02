@@ -16,7 +16,7 @@ rules:
     resources: ["persistentvolumes", "persistentvolumeclaims", "pods", "serviceaccounts", "services"]
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
   - apiGroups: ["dappmesh.io"]
-    resources: ["dappmeshs"]
+    resources: ["dappmeshes"]
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -49,7 +49,7 @@ spec:
         app: dapp-mesh-operator
     spec:
       containers:
-        - image: ghcr.io/dappmesh/dapp-mesh-operator:latest-dev
+        - image: ghcr.io/dappmesh/dapp-mesh-operator:latest
           imagePullPolicy: "Always"
           name: dapp-mesh-operator
           ports:
