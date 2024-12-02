@@ -14,9 +14,9 @@ use dapp_platform::k8s::core::operator::OperatorResource;
 	kind = "DappMesh",
 	namespaced,
 	singular = "dappmesh",
-	plural = "dappmeshs",
+	plural = "dappmeshes",
 	shortname = "mesh",
-	shortname = "meshs",
+	shortname = "meshes",
 	derive = "PartialEq",
 	derive = "Default"
 )]
