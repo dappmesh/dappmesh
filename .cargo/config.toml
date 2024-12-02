@@ -2,7 +2,3 @@
 rustflags = [
 	"-C", "target-feature=+crt-static"
 ]
-
-[env]
-CARGO_TARGET_DIR = "target"
-DAPP_DIR = "/app"
