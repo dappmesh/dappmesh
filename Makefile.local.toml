@@ -57,7 +57,7 @@ dependencies = ["check", "quick", "test"]
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-rust_version = set "1.83.0"
+rust_version = set "1.86.0"
 docker_dir = set "./docker/local"
 build_arg = set "TAG_VERSION=${rust_version}"
 file = set "${docker_dir}/Dockerfile"
@@ -69,7 +69,7 @@ exec docker buildx build --platform linux/amd64 --build-arg ${build_arg} --file 
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-rust_version = set "1.83.0"
+rust_version = set "1.86.0"
 tag = set "ghcr.io/dappmesh/devspace-container:${rust_version}"
 exec docker push ${tag}
 '''

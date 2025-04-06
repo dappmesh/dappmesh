@@ -228,7 +228,7 @@ where
 		self.meta().deletion_timestamp.is_some()
 	}
 	fn should_create(&self) -> bool {
-		self.meta().finalizers.as_ref().map_or(true, |finalizers| finalizers.is_empty())
+		self.meta().finalizers.as_ref().is_none_or(|finalizers| finalizers.is_empty())
 	}
 }
 

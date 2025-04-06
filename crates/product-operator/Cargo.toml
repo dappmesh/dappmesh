@@ -9,7 +9,7 @@ repository.workspace = true
 license.workspace = true
 
 [dependencies]
-dapp-platform = { workspace = true }
+dapp-core = { workspace = true }
 k8s-openapi = { workspace = true }
 kube = { workspace = true }
 schemars = { workspace = true }

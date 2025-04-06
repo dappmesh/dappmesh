@@ -1,4 +1,4 @@
-FROM alpine:3.20
+FROM alpine:3.21
 
 ARG  TAG_VERSION
 
@@ -12,6 +12,6 @@ ENV RUSTUP_HOME=/usr/local/rustup \
     RUST_VERSION=$TAG_VERSION
 
 COPY scripts/rustup.sh /opt/scripts/rustup.sh
-RUN /opt/scripts/rustup.sh
+RUN chmod +x /opt/scripts/rustup.sh && /opt/scripts/rustup.sh
 
 WORKDIR /app

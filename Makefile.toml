@@ -5,6 +5,7 @@ extend = [
 
 [env]
 CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
+TARGET_CC = "musl-gcc"
 
 [config]
 skip_core_tasks = true

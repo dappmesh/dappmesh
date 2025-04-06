@@ -1,9 +1,7 @@
 use kube::{runtime::controller::Action, ResourceExt};
 use std::sync::Arc;
 
-use dapp_platform::k8s::core::operator::{
-	Operator, OperatorContext, OperatorController, OperatorError,
-};
+use dapp_core::k8s::operator::{Operator, OperatorContext, OperatorController, OperatorError};
 use dapp_product_operator::{crd::DappProduct, operator::ProductOperatorController};
 
 #[tokio::main]

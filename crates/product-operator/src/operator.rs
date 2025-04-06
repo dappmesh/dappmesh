@@ -1,8 +1,8 @@
 use kube::Client;
 
 use crate::crd::DappProduct;
-use dapp_platform::k8s::core::operator::{OperatorController, OperatorError};
-use dapp_platform::k8s::storage::surrealdb::app::DappSurrealDB;
+use dapp_core::k8s::operator::{OperatorController, OperatorError};
+use dapp_core::k8s::storage::surrealdb::app::DappSurrealDB;
 
 pub struct ProductOperatorController<'a> {
 	pub surrealdb: DappSurrealDB<'a>,
@@ -18,7 +18,7 @@ impl<'a> ProductOperatorController<'a> {
 	}
 }
 
-impl<'a> OperatorController<DappProduct> for ProductOperatorController<'a> {
+impl OperatorController<DappProduct> for ProductOperatorController<'_> {
 	async fn create_resources(&self) -> Result<(), OperatorError> {
 		self.surrealdb.create().await?;
 		Ok(())
@@ -37,7 +37,7 @@ impl<'a> OperatorController<DappProduct> for ProductOperatorController<'a> {
 #[cfg(test)]
 mod tests {
 	use super::*;
-	use dapp_platform::k8s::core::operator::OperatorAction;
+	use dapp_core::k8s::operator::OperatorAction;
 	use std::sync::Arc;
 
 	#[tokio::test]
@@ -59,7 +59,8 @@ mod tests {
 	}
 
 	#[tokio::test]
-	async fn determine_action_returns_requeue_if_eletion_timestamp_is_empty_but_finalizer_is_not() {
+	async fn determine_action_returns_requeue_if_election_timestamp_is_empty_but_finalizer_is_not()
+	{
 		let product =
 			DappProduct::test_instance().finalize(ProductOperatorController::FINALIZER.to_string());
 
