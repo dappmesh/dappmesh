@@ -89,7 +89,7 @@ version = "1.9.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.cc]]
-version = "1.2.2"
+version = "1.2.18"
 criteria = "safe-to-deploy"
 
 [[exemptions.cfg-if]]
@@ -513,7 +513,7 @@ version = "0.8.5"
 criteria = "safe-to-deploy"
 
 [[exemptions.ring]]
-version = "0.17.8"
+version = "0.17.14"
 criteria = "safe-to-deploy"
 
 [[exemptions.rustc-demangle]]
@@ -634,10 +634,6 @@ criteria = "safe-to-deploy"
 
 [[exemptions.socket2]]
 version = "0.5.8"
-criteria = "safe-to-deploy"
-
-[[exemptions.spin]]
-version = "0.9.8"
 criteria = "safe-to-deploy"
 
 [[exemptions.strsim]]
