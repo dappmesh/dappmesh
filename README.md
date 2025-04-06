@@ -138,7 +138,7 @@ For more commands, read the [Makefile](./Makefile) and [Makefile.toml](./Makefil
 # quick build 
 make quick
 
-# creates CRDs, infrastructure, platform operators and data product application
+# creates CRDs, infrastructure, core operators and data product application
 devspace dev
 ```
 

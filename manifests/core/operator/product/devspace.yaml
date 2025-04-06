@@ -2,7 +2,7 @@ version: v2beta1
 name: dappmesh-product-operator
 
 dependencies:
-  platform:
+  core:
     path: ../../
     pipeline: dev
 
@@ -12,7 +12,7 @@ vars:
 pipelines:
   dev:
     run: |-
-      run_dependency_pipelines platform
+      run_dependency_pipelines core
       start_dev app
 
 dev:

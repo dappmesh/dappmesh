@@ -1,5 +1,5 @@
 version: v2beta1
-name: dappmesh-platform
+name: dappmesh-core
 
 pullSecrets:
   ghcr-dappmesh:
@@ -7,8 +7,6 @@ pullSecrets:
     username: ${GHCR_DAPPMESH_USER}
     password: ${GHCR_DAPPMESH_TOKEN}
     serviceAccounts:
-      - dapp-domain-operator
-      - dapp-mesh-operator
       - dapp-product-operator
 
 dependencies:

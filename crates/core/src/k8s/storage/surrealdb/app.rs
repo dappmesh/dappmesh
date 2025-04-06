@@ -1,9 +1,7 @@
 use super::config::SurrealDBConfig;
 use crate::{
 	include_resource,
-	k8s::core::resource::{
-		DappPersistenceVolumeClaim, DappService, DappServiceAccount, DappStatefulSet,
-	},
+	k8s::resource::{DappPersistenceVolumeClaim, DappService, DappServiceAccount, DappStatefulSet},
 };
 use kube::{Client, Error};
 

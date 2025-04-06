@@ -20,7 +20,7 @@ script = '''
 TARGET_DIR = set "./target/x86_64-unknown-linux-musl/release"
 DOCKER_RESOURCES_DIR = set "./docker/ci/bin"
 
-binaries = array "dapp-domain-operator" "dapp-mesh-operator" "dapp-product-operator"
+binaries = array "dapp-product-operator"
 
 mkdir ${DOCKER_RESOURCES_DIR}
 for binary in ${binaries}
@@ -34,7 +34,7 @@ end
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-binaries = array "dapp-domain-operator" "dapp-mesh-operator" "dapp-product-operator"
+binaries = array "dapp-product-operator"
 
 for binary in ${binaries}
     docker_dir = set "./docker/ci"
@@ -49,7 +49,7 @@ end
 category = "LOCAL USAGE"
 script_runner = "@duckscript"
 script = '''
-binaries = array "dapp-domain-operator" "dapp-mesh-operator" "dapp-product-operator"
+binaries = array "dapp-product-operator"
 
 for binary in ${binaries}
     tag = set "ghcr.io/dappmesh/${binary}:latest"

@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
 	use anyhow::{ensure, Error};
-	use dapp_platform::k8s::core::operator::{OperatorContext, OperatorController};
+	use dapp_core::k8s::operator::{OperatorContext, OperatorController};
 	use dapp_product_operator::crd::{DappProduct, DappProductSpec};
 	use dapp_product_operator::operator::ProductOperatorController;
 	use kube::{

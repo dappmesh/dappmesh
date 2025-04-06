@@ -46,7 +46,7 @@ jobs:
         uses: medyagh/setup-minikube@latest
       
       - name: Install CRDs
-        run: kubectl apply -f manifests/platform/crds/
+        run: kubectl apply -f manifests/core/crds/
       
       - name: Check Integration Tests
         run: cargo make integration-test
