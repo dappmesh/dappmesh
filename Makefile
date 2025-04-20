@@ -23,7 +23,7 @@ check-dev: check-deps
 
 .PHONY: check-release
 check-release: check-deps
-	cargo make --profile release check-relase
+	cargo make --profile release check-release
 
 .PHONY: clean
 clean: check-deps

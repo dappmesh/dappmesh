@@ -5,7 +5,7 @@ command = "cargo"
 args = ["build", "--workspace", "--release", "--target", "${TARGET_PLATFORM}", "${@}"]
 
 # Check tasks
-[tasks.check-relase]
+[tasks.check-release]
 category = "RELEASE"
 dependencies = ["cargo-check-release", "cargo-fmt-release", "cargo-clippy-release"]
 
