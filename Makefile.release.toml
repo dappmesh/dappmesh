@@ -1,0 +1,30 @@
+# Build tasks
+[tasks.build-release]
+category = "RELEASE"
+command = "cargo"
+args = ["build", "--workspace", "--release", "--target", "${TARGET_PLATFORM}", "${@}"]
+
+# Check tasks
+[tasks.check-release]
+category = "RELEASE"
+dependencies = ["cargo-check-release", "cargo-fmt-release", "cargo-clippy-release"]
+
+[tasks.cargo-check-release]
+category = "RELEASE"
+command = "cargo"
+args = ["check", "--locked", "--workspace"]
+
+[tasks.cargo-fmt-release]
+category = "RELEASE"
+command = "cargo"
+args = ["fmt", "--all", "--check"]
+
+[tasks.cargo-clippy-release]
+category = "RELEASE"
+command = "cargo"
+args = ["clippy", "--all-targets", "--tests", "--benches", "--examples", "--bins", "--", "-D", "warnings"]
+
+# Docker tasks
+[tasks.docker-release]
+category = "RELEASE"
+dependencies = ["docker-resources-common", "docker-build-common", "docker-push-common", "docker-clean-common"]

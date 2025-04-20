@@ -1,0 +1,67 @@
+[tasks.docker-build-common]
+private = true
+script_runner = "@duckscript"
+script = '''
+echo Building Docker images with:
+echo   Images: ${DOCKER_IMAGES}
+echo   Directory: ${DOCKER_DIR}
+echo   Tag: ${DOCKER_TAG}
+echo   Dockerfile: ${DOCKERFILE}
+
+if is_empty ${DOCKERFILE}
+    DOCKERFILE = set ${DOCKER_DIR}/Dockerfile
+end
+
+images = split ${DOCKER_IMAGES} ","
+
+for image in ${images}
+    tag = set ${DOCKER_REGISTRY}/${image}:${DOCKER_TAG}
+    arg_image_name = set ARG_IMAGE_NAME=${image}
+    arg_rust_version = set ARG_RUST_VERSION=${RUST_VERSION}
+    build_args = set "--build-arg ${arg_image_name} --build-arg ${arg_rust_version}"
+    echo Building image: ${tag}
+    echo Building image with args: ${build_args}
+
+    exec docker buildx build --platform linux/amd64 --build-arg ${arg_image_name} --build-arg ${arg_rust_version} --file ${DOCKERFILE} --tag ${tag} ${DOCKER_DIR}
+
+end
+'''
+
+[tasks.docker-push-common]
+private = true
+script_runner = "@duckscript"
+script = '''
+echo Pushing Docker images with tag: ${DOCKER_TAG}
+
+images = split ${DOCKER_IMAGES} ","
+
+for image in ${images}
+    tag = set ${DOCKER_REGISTRY}/${image}:${DOCKER_TAG}
+    echo Pushing image: ${tag}
+    exec docker push ${tag}
+end
+'''
+
+[tasks.docker-resources-common]
+private = true
+script_runner = "@duckscript"
+script = '''
+echo Copying docker resources from ${TARGET_DIR} to ${DOCKER_RESOURCES_DIR}
+binaries = split ${BINARIES} ","
+
+mkdir ${DOCKER_RESOURCES_DIR}
+for binary in ${binaries}
+    source = set ${TARGET_DIR}/${binary}
+    target = set ${DOCKER_RESOURCES_DIR}/${binary}
+    echo Copying ${source} to ${target}
+    cp ${source} ${target}
+end
+'''
+
+[tasks.docker-clean-common]
+private = true
+script_runner = "@duckscript"
+script = '''
+echo Cleaning docker resources directory: ${DOCKER_RESOURCES_DIR}
+rm -r ${DOCKER_RESOURCES_DIR}
+'''

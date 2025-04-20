@@ -1,0 +1,12 @@
+FROM cgr.dev/chainguard/glibc-dynamic:latest AS release
+
+ARG ARG_IMAGE_NAME
+ARG ARG_RUST_VERSION
+
+ENV OPERATOR_BIN=$ARG_IMAGE_NAME
+
+USER root
+
+COPY --chmod=755 bin/${OPERATOR_BIN} /${OPERATOR_BIN}
+
+ENTRYPOINT ["/${OPERATOR_BIN}"]

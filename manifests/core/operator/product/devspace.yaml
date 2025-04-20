@@ -20,7 +20,7 @@ dev:
     namespace: dappmesh
     labelSelector:
       app: dapp-product-operator
-    devImage: ghcr.io/dappmesh/devspace-container:${DEVSPACE_CONTAINER_TAG}
+    devImage: ghcr.io/dappmesh/${DEVSPACE_CONTAINER_NAME}:${DEVSPACE_CONTAINER_TAG}
     sync:
       - path: ../../../../target/${DEVSPACE_TARGET_PLATFORM}/debug/dapp-product-operator:/app/dapp-product-operator
         file: true

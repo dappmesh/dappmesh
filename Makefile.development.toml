@@ -1,0 +1,56 @@
+# Setup tasks
+[tasks.cargo-update]
+private = true
+command = "cargo"
+args = ["update"]
+
+[tasks.setup]
+category = "DEVELOPMENT"
+dependencies = ["cargo-update"]
+
+# Check tasks
+[tasks.check-dev]
+category = "DEVELOPMENT"
+dependencies = ["cargo-check-dev", "cargo-fmt-dev", "cargo-clippy-dev"]
+
+[tasks.cargo-check-dev]
+category = "DEVELOPMENT"
+command = "cargo"
+args = ["check", "--workspace"]
+
+[tasks.cargo-clippy-dev]
+category = "DEVELOPMENT"
+command = "cargo"
+args = ["clippy", "--all-targets", "--all-features", "--", "-D", "warnings"]
+
+[tasks.cargo-fmt-dev]
+category = "DEVELOPMENT"
+command = "cargo"
+args = ["fmt", "--all", "--check"]
+
+# Build tasks
+[tasks.build-dev]
+category = "DEVELOPMENT"
+command = "cargo"
+args = ["build", "--workspace", "--target", "x86_64-unknown-linux-musl", "${@}"]
+
+[tasks.default]
+category = "DEVELOPMENT"
+clear = true
+dependencies = ["check-dev", "build-dev", "test"]
+
+# Docker tasks
+[tasks.docker-dev]
+category = "DEVELOPMENT"
+dependencies = ["docker-build-common", "docker-push-common"]
+
+# Test tasks
+[tasks.test]
+category = "DEVELOPMENT"
+command = "cargo"
+args = ["test", "--workspace", "--", "--nocapture"]
+
+[tasks.integration-test]
+category = "DEVELOPMENT"
+command = "cargo"
+args = ["test", "--workspace", "--", "--ignored"]

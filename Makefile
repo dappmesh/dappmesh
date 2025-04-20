@@ -15,39 +15,41 @@ check-deps:
 
 .PHONY: setup
 setup: check-deps
-	cargo make setup
+	cargo make --profile development setup
 
-.PHONY: check
-check: check-deps
-	cargo make check
+.PHONY: check-dev
+check-dev: check-deps
+	cargo make --profile development check-dev
+
+.PHONY: check-release
+check-release: check-deps
+	cargo make --profile release check-release
 
 .PHONY: clean
 clean: check-deps
 	cargo make clean
 
-# Build
-.PHONY: quick
-quick: check-deps
-	cargo make quick
+.PHONY: build-dev
+build-dev: check-deps
+	cargo make --profile development build-dev
 
-.PHONY: build
-build: check-deps
-	cargo make build
+.PHONY: build-release
+build-release: check-deps
+	cargo make --profile release build-release
 
 # Docker
-.PHONY: docker
-docker: quick
-	cargo make docker
+.PHONY: docker-dev
+docker-dev: build-dev
+	cargo make --profile development docker-dev
 
-.PHONY: ci-docker
-ci-docker: build
-	cargo make ci-docker
+.PHONY: docker-release
+docker-release: build-release
+	cargo make --profile release docker-release
 
-# Tests
 .PHONY: test
-test: quick
-	cargo make test
+test: build-dev
+	cargo make --profile development test
 
 .PHONY: integration-test
-integration-test: quick
-	cargo make integration-test
+integration-test: build-dev
+	cargo make --profile development integration-test
