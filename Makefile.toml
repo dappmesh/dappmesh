@@ -1,11 +1,14 @@
 extend = [
-	{ path = "Makefile.local.toml" },
-	{ path = "Makefile.ci.toml" }
+	{ path = "Makefile.development.toml" },
+	{ path = "Makefile.docker.toml" },
+	{ path = "Makefile.release.toml" },
 ]
 
-[env]
-CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
-TARGET_CC = "musl-gcc"
+env_files = [
+	{ path = "./.env" },
+	{ path = "./development.env", profile = "development" },
+	{ path = "./release.env", profile = "release" }
+]
 
 [config]
 skip_core_tasks = true
@@ -22,3 +25,8 @@ private = true
 
 [tasks.end]
 private = true
+
+[tasks.clean]
+category = "LOCAL"
+command = "cargo"
+args = ["clean"]

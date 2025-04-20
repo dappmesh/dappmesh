@@ -33,7 +33,7 @@ version = "0.1.5"
 criteria = "safe-to-deploy"
 
 [[exemptions.anyhow]]
-version = "1.0.97"
+version = "1.0.98"
 criteria = "safe-to-run"
 
 [[exemptions.async-broadcast]]

@@ -17,18 +17,18 @@ license = "BSL-1.0"
 
 [workspace.dependencies]
 dapp-core = { path = "crates/core", version = "0.1.0" }
-anyhow = "1.0.97"
+anyhow = "1.0.98"
 chrono = "0.4.40"
 futures = "0.3.31"
 hyper = "1.6.0"
-k8s-openapi = { version = "0.24.0", default-features = false, features = ["v1_31"] }
+k8s-openapi = { version = "0.24.0", default-features = false, features = ["v1_32"] }
 kube = { version = "0.99.0", features = ["derive", "runtime"] }
 kube-core = "0.99.0"
 regex = "1.11.1"
 schemars = "0.8.22"
 serde = "1.0.219"
 serde_json = "1.0.140"
-serde_yaml = "0.9.34+deprecated"
+serde_yaml = "0.9.19"
 thiserror = "2.0.12"
 tokio = { version = "1.44.2", features = ["macros", "rt-multi-thread", "time"] }
 tower-test = "0.4.0"

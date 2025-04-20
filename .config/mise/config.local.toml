@@ -1,6 +1,6 @@
 [tools]
-colima = '0.8.0'
-helm = '3.16.3'
-kubectl = '1.31.3'
-lima = '1.0.1'
-rust = '1.83.0'
+colima = '0.8.1'
+helm = '3.17.3'
+kubectl = '1.32.3'
+lima = '1.0.7'
+rust = '1.86.0'
